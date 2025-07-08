@@ -1,25 +1,29 @@
 
 import React from "react";
 
+
+
+
+
 const charityRequests = [
   {
     id: 1,
     name: "Helping Hands",
-    logo: "https://i.ibb.co/1RZkY6y/charity1.png",
+    logo: "https://i.ibb.co/6JWWzSv4/sponsorship-for-orphan-1024x682-1.jpg",
     description: "We need fruits for children this weekend.",
     foodTitle: "Fruit Basket",
   },
   {
     id: 2,
     name: "Smile Foundation",
-    logo: "https://i.ibb.co/ypfF3xT/charity2.png",
+    logo: "https://i.ibb.co/FkbR8b5D/x0165u0t4ad10d31d576186ml3rwr24r.webp",
     description: "Looking for bakery items for community brunch.",
     foodTitle: "Bakery Donation",
   },
   {
     id: 3,
     name: "Food for All",
-    logo: "https://i.ibb.co/mc5xH3x/charity3.png",
+    logo: "https://i.ibb.co/C3LHXFj9/360-F-497455841-1-TSJ07ny-Ec-SOIz-YJ4nev-IGt-Ee0-VOPWTF.jpg",
     description: "Need cooked meals for 50 people today.",
     foodTitle: "Cooked Meal Pack",
   },

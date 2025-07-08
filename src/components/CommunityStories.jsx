@@ -1,18 +1,20 @@
 
 import React from "react";
 
+
+
 const stories = [
   {
     id: 1,
     name: "Green Bites Restaurant",
     story: "We've reduced food waste by 70% since joining the platform!",
-    image: "https://i.ibb.co/7zqB1VS/restaurant-success.jpg",
+    image: "https://i.ibb.co/C3LHXFj9/360-F-497455841-1-TSJ07ny-Ec-SOIz-YJ4nev-IGt-Ee0-VOPWTF.jpg",
   },
   {
     id: 2,
     name: "Hope Charity",
     story: "With donations, we now feed 100 people every weekend.",
-    image: "https://i.ibb.co/3B9yz8H/charity-success.jpg",
+    image: "https://i.ibb.co/xSnDzTHw/Bid4-min.png",
   },
 ];
 
