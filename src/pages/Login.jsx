@@ -5,22 +5,47 @@ import { useNavigate, Link } from "react-router-dom";
 import { auth } from "../firebase/src/firebase/firebase.config";
 import toast from "react-hot-toast";
 import Lottie from "lottie-react";
-
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const [error, setError] = useState(null);
   const [showSuccessAnim, setShowSuccessAnim] = useState(false);
+  const [email, setEmail] = useState(null); // store logged-in email
   const navigate = useNavigate();
 
+  // 🟡 Step 1: Fetch user info from MongoDB by email
+ const { data: dbUser, isLoading } = useQuery({
+  queryKey: ["user", email],
+  queryFn: async () => {
+    const res = await axios.get(`/api/users?email=${email}`);
+    return res.data;
+  },
+  enabled: !!email,
+});
+
+
+  // 🟢 Step 2: Handle form submission and login
   const onSubmit = async (data) => {
     try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+      setEmail(userCredential.user.email); // trigger useQuery
       toast.success("Login successful!");
       setShowSuccessAnim(true);
+
+      // Wait a bit for animation + data fetch
       setTimeout(() => {
         setShowSuccessAnim(false);
-        navigate("/");
+        if (dbUser?.role === "admin") {
+          navigate("/admin-dashboard");
+        } else {
+          navigate("/dashboard");
+        }
       }, 2500);
     } catch (err) {
       setError(err.message);
@@ -33,7 +58,6 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 px-6 py-12 gap-10 relative overflow-hidden">
-      
       {/* Login Form */}
       <div className="w-full max-w-md bg-white p-8 sm:p-10 rounded-2xl shadow-2xl border border-blue-200">
         <h2 className="text-3xl sm:text-4xl font-extrabold text-center text-blue-700 mb-4">
@@ -63,7 +87,7 @@ const Login = () => {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 sm:py-4 rounded-xl shadow-md transition"
           >
-            Login
+            {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
 
@@ -78,7 +102,7 @@ const Login = () => {
       {/* Lottie Animation */}
       <div className="w-full md:w-1/2 flex justify-center items-center">
         <div className="w-[90%] max-w-lg h-[300px] sm:h-[400px]">
-          
+          {/* Animation can go here */}
         </div>
       </div>
 
@@ -86,7 +110,7 @@ const Login = () => {
       {showSuccessAnim && (
         <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="w-[260px] sm:w-[320px] bg-white rounded-2xl shadow-lg p-2">
-         
+            {/* Success animation or icon */}
           </div>
         </div>
       )}

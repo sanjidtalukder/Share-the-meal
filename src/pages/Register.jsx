@@ -5,7 +5,7 @@ import { auth } from "../firebase/src/firebase/firebase.config";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import Lottie from "lottie-react";
-
+import axios from "axios"; // ✅ axios import
 
 const Register = () => {
   const { register, handleSubmit, reset } = useForm();
@@ -23,11 +23,19 @@ const Register = () => {
     }
 
     try {
+      // ✅ Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
       await updateProfile(userCredential.user, {
         displayName: name,
         photoURL: photo || "",
+      });
+
+      // ✅ Save user to MongoDB
+      await axios.post("http://localhost:5000/api/users", {
+        name,
+        email,
+        photo,
       });
 
       toast.success("Registration successful!");
@@ -49,7 +57,7 @@ const Register = () => {
       {/* Animation */}
       <div className="hidden md:flex md:w-1/2 justify-center">
         <div className="w-full max-w-lg shadow-lg rounded-xl overflow-hidden bg-white">
-        
+          {/* Optional animation content */}
         </div>
       </div>
 
@@ -113,7 +121,7 @@ const Register = () => {
       {showSuccessAnim && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="w-[280px] md:w-[360px] p-4 bg-white rounded-2xl shadow-lg">
-        
+            {/* Optional success animation (Lottie) */}
           </div>
         </div>
       )}
