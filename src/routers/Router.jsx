@@ -12,6 +12,7 @@ import MyProfile from "../Dashboard/MyProfile";
 import Favorites from "../Dashboard/Favorites";
 import MyReviews from "../Dashboard/MyReviews";
 import TransactionHistory from "../Dashboard/TransactionHistory";
+import RequestCharityRole from "../Dashboard/RequestCharityRole";
 
 // Dashboard layout & pages
 
@@ -53,6 +54,7 @@ const router = createBrowserRouter([
     { path: "favorites", element: <Favorites /> },
     { path: "my-reviews", element: <MyReviews /> },
     { path: "my-transactions", element: <TransactionHistory /> },
+    { path: "request-charity-role", element: <RequestCharityRole /> },
     // { path: "request-charity", element: <RequestCharityRole /> },
     // { path: "favorites", element: <Favorites /> },
       // ADMIN Routes
