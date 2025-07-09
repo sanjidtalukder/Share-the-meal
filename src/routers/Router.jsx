@@ -8,6 +8,10 @@ import DonationDetails from "../pages/DonationDetails";
 
 import PrivateRoute from "../routes/PrivateRoute";
 import DashboardLayout from "../layout/DashboardLayout";
+import MyProfile from "../Dashboard/MyProfile";
+import Favorites from "../Dashboard/Favorites";
+import MyReviews from "../Dashboard/MyReviews";
+import TransactionHistory from "../Dashboard/TransactionHistory";
 
 // Dashboard layout & pages
 
@@ -45,6 +49,12 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+    { path: "my-profile", element: <MyProfile /> },
+    { path: "favorites", element: <Favorites /> },
+    { path: "my-reviews", element: <MyReviews /> },
+    { path: "my-transactions", element: <TransactionHistory /> },
+    // { path: "request-charity", element: <RequestCharityRole /> },
+    // { path: "favorites", element: <Favorites /> },
       // ADMIN Routes
       // { path: "admin-profile", element: <AdminProfile /> },
       // { path: "manage-donations", element: <ManageDonations /> },
