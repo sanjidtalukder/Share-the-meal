@@ -5,10 +5,11 @@ import toast from "react-hot-toast";
 const ManageDonations = () => {
   const [donations, setDonations] = useState([]);
 
-  useEffect(() => {
-    axios.get("http://localhost:5000/api/donations/pending")
-      .then(res => setDonations(res.data));
-  }, []);
+ useEffect(() => {
+  axios.get("http://localhost:5000/api/donations?status=Pending")
+    .then(res => setDonations(res.data))
+    .catch(err => console.error("Failed to fetch donations", err));
+}, []);
 
   const handleVerify = async (id) => {
     await axios.patch(`http://localhost:5000/api/donations/${id}/verify`);
@@ -17,10 +18,15 @@ const ManageDonations = () => {
   };
 
   const handleReject = async (id) => {
-    await axios.patch(`http://localhost:5000/api/donations/${id}/reject`);
+  try {
+    await axios.put(`http://localhost:5000/api/donations/reject/${id}`);
     toast.error("Donation rejected.");
     setDonations(prev => prev.filter(d => d._id !== id));
-  };
+  } catch (err) {
+    console.error("Rejection failed", err);
+    toast.error("Error rejecting donation");
+  }
+};
 
   return (
     <div className="p-6 bg-white rounded shadow">

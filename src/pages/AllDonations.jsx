@@ -21,7 +21,7 @@ const AllDonations = () => {
   }, []);
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
+    <div className="p-4 max-w-6xl h-screen mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-center">All Donations</h1>
       {loading ? (
         <p className="text-center">Loading...</p>
