@@ -35,7 +35,7 @@ const Banner = () => {
             src={slide.image}
             alt={slide.title}
             className="w-full h-[90vh] object-cover"
-            loading="lazy"
+            // loading="lazy"
           />
 
           {/* Text Overlay */}
