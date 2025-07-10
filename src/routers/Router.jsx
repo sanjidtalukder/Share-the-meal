@@ -13,6 +13,10 @@ import Favorites from "../Dashboard/Favorites";
 import MyReviews from "../Dashboard/MyReviews";
 import TransactionHistory from "../Dashboard/TransactionHistory";
 import RequestCharityRole from "../Dashboard/RequestCharityRole";
+import RestaurantProfile from "../Dashboard/RestaurantDashboard/RestaurantProfile";
+import AddDonation from "../Dashboard/RestaurantDashboard/AddDonation";
+import MyDonations from "../Dashboard/RestaurantDashboard/MyDonations";
+import RequestedDonations from "../Dashboard/RestaurantDashboard/RequestedDonations";
 
 // Dashboard layout & pages
 
@@ -62,8 +66,10 @@ const router = createBrowserRouter([
       // { path: "manage-donations", element: <ManageDonations /> },
 
       // RESTAURANT Routes
-      // { path: "restaurant-profile", element: <RestaurantProfile /> },
-      // { path: "add-donation", element: <AddDonation /> },
+      { path: "restaurant-profile", element: <RestaurantProfile /> },
+      { path: "add-donation", element: <AddDonation /> },
+      { path: "my-donations", element: <MyDonations /> },
+      { path: "requestedDonatins", element: <RequestedDonations /> },
 
       // CHARITY Routes
       // { path: "charity-profile", element: <CharityProfile /> },
