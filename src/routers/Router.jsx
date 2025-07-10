@@ -17,6 +17,11 @@ import RestaurantProfile from "../Dashboard/RestaurantDashboard/RestaurantProfil
 import AddDonation from "../Dashboard/RestaurantDashboard/AddDonation";
 import MyDonations from "../Dashboard/RestaurantDashboard/MyDonations";
 import RequestedDonations from "../Dashboard/RestaurantDashboard/RequestedDonations";
+import CharityProfile from "../Dashboard/charity/CharityProfile";
+import MyRequests from "../Dashboard/charity/MyRequests";
+import MyPickups from "../Dashboard/charity/MyPickups";
+import ReceivedDonations from "../Dashboard/charity/ReceivedDonations";
+import MyCharityTransactions from "../Dashboard/charity/MyCharityTransactions";
 
 // Dashboard layout & pages
 
@@ -72,8 +77,12 @@ const router = createBrowserRouter([
       { path: "requestedDonatins", element: <RequestedDonations /> },
 
       // CHARITY Routes
-      // { path: "charity-profile", element: <CharityProfile /> },
-      // { path: "my-requests", element: <MyRequests /> },
+     { path: "charity-profile", element: <CharityProfile /> },
+{ path: "my-requests", element: <MyRequests /> },
+{ path: "my-pickups", element: <MyPickups/> },
+{ path: "received-donations", element: <ReceivedDonations /> },
+{ path: "my-charity-transactions", element: <MyCharityTransactions /> },
+
 
       // USER Routes
       // { path: "my-profile", element: <MyProfile /> },
