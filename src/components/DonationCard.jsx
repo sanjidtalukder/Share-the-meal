@@ -3,17 +3,16 @@
 import React from "react";
 
 const DonationCard = ({ donation }) => {
-  const {
-    image,
-    title,
-    restaurantName,
-    location,
-    charityName,
-    status,
-  } = donation;
+ const {
+  image,
+  title,
+  charityName,
+  status,
+  restaurant: { name: restaurantName, location }, //  nested destructure
+} = donation;
 
   return (
-    <div className="border rounded-xl shadow-md overflow-hidden bg-white">
+    <div className=" rounded-xl border-2  border-green-400  overflow-hidden bg-white shadow-2xl">
       <img src={image} alt={title} className="w-full h-48 object-cover" />
       <div className="p-4 space-y-2">
         <h2 className="text-xl font-semibold">{title}</h2>

@@ -12,10 +12,15 @@ const ManageDonations = () => {
 }, []);
 
   const handleVerify = async (id) => {
-    await axios.patch(`http://localhost:5000/api/donations/${id}/verify`);
+  try {
+    await axios.put(`http://localhost:5000/api/donations/verify/${id}`);
     toast.success("Donation verified!");
     setDonations(prev => prev.filter(d => d._id !== id));
-  };
+  } catch (err) {
+    console.error("Verification failed:", err);
+    toast.error("Could not verify donation.");
+  }
+};
 
   const handleReject = async (id) => {
   try {
