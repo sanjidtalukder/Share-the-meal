@@ -22,6 +22,7 @@ import MyRequests from "../Dashboard/charity/MyRequests";
 import MyPickups from "../Dashboard/charity/MyPickups";
 import ReceivedDonations from "../Dashboard/charity/ReceivedDonations";
 import MyCharityTransactions from "../Dashboard/charity/MyCharityTransactions";
+import CreatDonation from "../pages/CreatDonation";
 
 // Dashboard layout & pages
 
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
       { path: "register", element: <Register /> },
       { path: "donations", element: <AllDonations /> },
       { path: "details", element: <DonationDetails /> },
+      { path: "creat-donation", element: <CreatDonation /> },
     ],
   },
   {

@@ -46,6 +46,21 @@ const Navbar = () => {
               All Donations
             </NavLink>
           </li>
+
+         <li>
+            <NavLink
+              to="creat-donation"
+              className={({ isActive }) =>
+                isActive
+                  ? "font-semibold underline text-yellow-300"
+                  : "hover:text-yellow-100 transition-colors"
+              }
+              onClick={() => setDropdownOpen(false)}
+            >
+             Creat Donation
+            </NavLink>
+          </li>
+           
           <li>
             <NavLink
               to="/dashboard"

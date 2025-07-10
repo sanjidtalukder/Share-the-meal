@@ -1,16 +1,18 @@
+import { NavLink } from "react-router";
+
 const Footer = () => {
   return (
-    <footer className="footer footer-center bg-green-700 text-white p-10">
+    <footer className="footer footer-center bg-green-700 text-white p-10 rounded-t-4xl">
       {/* Top Navigation Links */}
-      <nav className="grid grid-flow-col gap-6 text-lg font-medium">
+      <NavLink className="grid grid-flow-col gap-6 text-lg font-medium">
         <a className="link link-hover hover:text-yellow-300">About us</a>
         <a className="link link-hover hover:text-yellow-300">Contact</a>
         <a className="link link-hover hover:text-yellow-300">Jobs</a>
         <a className="link link-hover hover:text-yellow-300">Press kit</a>
-      </nav>
+      </NavLink>
 
       {/* Social Media Icons */}
-      <nav>
+      <NavLink>
         <div className="grid grid-flow-col gap-6 mt-4">
           <a href="#" title="Twitter">
             <svg
@@ -46,7 +48,7 @@ const Footer = () => {
             </svg>
           </a>
         </div>
-      </nav>
+      </NavLink>
 
       {/* Footer Bottom Text */}
       <aside className="mt-6 text-sm">

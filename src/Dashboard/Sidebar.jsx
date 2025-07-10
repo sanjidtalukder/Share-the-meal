@@ -1,5 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import useUserRole from "../hooks/useUserRole";
+import {
+  FaHome,
+  FaUserCircle,
+  FaHandsHelping,
+  FaHeart,
+  FaStar,
+  FaMoneyCheckAlt,
+  FaUtensils,
+  FaPlusCircle,
+  FaClipboardList,
+  FaBoxes,
+  FaChartLine,
+} from "react-icons/fa";
 
 const Sidebar = () => {
   const [role, isLoading] = useUserRole();
@@ -7,8 +20,8 @@ const Sidebar = () => {
   if (isLoading) return <div className="p-4">Loading Sidebar...</div>;
 
   return (
-    <div className="w-64 bg-green-300 p-4 min-h-screen">
-      <h2 className="text-2xl font-extrabold text-white mb-6">Dashboard</h2>
+    <div className="w-64 bg-green-300 p-4 min-h-screen shadow-lg">
+      <h2 className="text-2xl font-extrabold text-white mb-6 text-center">Dashboard</h2>
 
       {/* Back to Home Link */}
       <Link
@@ -21,39 +34,71 @@ const Sidebar = () => {
       {/* User Sidebar */}
       {role === "user" && (
         <div className="bg-white p-4 rounded-lg shadow mb-6 space-y-2">
-          <h1 className="text-xl font-bold text-green-700 mb-2">👤 User Panel</h1>
-          <Link className="block hover:underline" to="/dashboard/my-profile">My Profile</Link>
-          <Link className="block hover:underline" to="/dashboard/request-charity-role">Request Charity</Link>
-          <Link className="block hover:underline" to="/dashboard/favorites">Favorites</Link>
-          <Link className="block hover:underline" to="/dashboard/my-reviews">My Reviews</Link>
-          <Link className="block hover:underline" to="/dashboard/my-transactions">Transaction History</Link>
+          <h1 className="text-xl font-bold text-green-700 mb-3 flex items-center gap-2">
+            <FaUserCircle /> User Panel
+          </h1>
+          <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/my-profile">
+            <FaUserCircle /> My Profile
+          </NavLink>
+          <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/request-charity-role">
+            <FaHandsHelping /> Request Charity
+          </NavLink>
+          <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/favorites">
+            <FaHeart /> Favorites
+          </NavLink>
+          <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/my-reviews">
+            <FaStar /> My Reviews
+          </NavLink>
+          <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/my-transactions">
+            <FaMoneyCheckAlt /> Transaction History
+          </NavLink>
         </div>
       )}
 
       {/* Restaurant Sidebar */}
       {/* {(role === "restaurant" || !role) && ( */}
         <div className="bg-white p-4 rounded-lg shadow mb-6 space-y-2">
-          <h1 className="text-xl font-bold text-green-700 mb-2">🍽 Restaurant Panel</h1>
-          <Link className="block hover:underline" to="/dashboard/restaurant-profile">Restaurant Profile</Link>
-          <Link className="block hover:underline" to="/dashboard/add-donation">Add Donation</Link>
-          <Link className="block hover:underline" to="/dashboard/my-donations">My Donations</Link>
-          <Link className="block hover:underline" to="/dashboard/requestedDonatins">Requested Donations</Link>
+          <h1 className="text-xl font-bold text-green-700 mb-3 flex items-center gap-2">
+            <FaUtensils /> Restaurant Panel
+          </h1>
+          <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/restaurant-profile">
+            <FaUserCircle /> Restaurant Profile
+          </NavLink>
+          <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/add-donation">
+            <FaPlusCircle /> Add Donation
+          </NavLink>
+          <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/my-donations">
+            <FaClipboardList /> My Donations
+          </NavLink>
+          <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/requestedDonatins">
+            <FaBoxes /> Requested Donations
+          </NavLink>
         </div>
-      {/* // )} */}
+      {/* )} */}
 
       {/* Charity Sidebar */}
       {/* {(role === "charity" || !role) && ( */}
         <div className="bg-white p-4 rounded-lg shadow mb-6 space-y-2">
-          <h1 className="text-xl font-bold text-green-700 mb-2">🎗 Charity Panel</h1>
-          <Link className="block hover:underline" to="/dashboard/charity-profile">Charity Profile</Link>
-          <Link className="block hover:underline" to="/dashboard/my-requests">My Requests</Link>
-          <Link className="block hover:underline" to="/dashboard/my-pickups">My Pickups</Link>
-          <Link className="block hover:underline" to="/dashboard/received-donations">Received Donations</Link>
-          <Link className="block hover:underline" to="/dashboard/my-charity-transactions">Transaction History</Link>
+          <h1 className="text-xl font-bold text-green-700 mb-3 flex items-center gap-2">
+            🎗 Charity Panel
+          </h1>
+          <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/charity-profile">
+            <FaUserCircle /> Charity Profile
+          </NavLink>
+          <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/my-requests">
+            <FaClipboardList /> My Requests
+          </NavLink>
+          <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/my-pickups">
+            <FaBoxes /> My Pickups
+          </NavLink>
+          <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/received-donations">
+            <FaHandsHelping /> Received Donations
+          </NavLink>
+          <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/my-charity-transactions">
+            <FaChartLine /> Transaction History
+          </NavLink>
         </div>
       {/* )} */}
-
-      {/* Add more roles like admin here if needed */}
     </div>
   );
 };
