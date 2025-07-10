@@ -15,7 +15,7 @@ const Login = () => {
   const [email, setEmail] = useState(null); // store logged-in email
   const navigate = useNavigate();
 
-  // 🟡 Step 1: Fetch user info from MongoDB by email
+  //  Step 1: Fetch user info from MongoDB by email
  const { data: dbUser, isLoading } = useQuery({
   queryKey: ["user", email],
   queryFn: async () => {
@@ -26,7 +26,7 @@ const Login = () => {
 });
 
 
-  // 🟢 Step 2: Handle form submission and login
+  //  Step 2: Handle form submission and login
   const onSubmit = async (data) => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -44,7 +44,7 @@ const Login = () => {
         if (dbUser?.role === "admin") {
           navigate("/admin-dashboard");
         } else {
-          navigate("/dashboard");
+          navigate("/");
         }
       }, 2500);
     } catch (err) {
