@@ -23,6 +23,12 @@ import MyPickups from "../Dashboard/charity/MyPickups";
 import ReceivedDonations from "../Dashboard/charity/ReceivedDonations";
 import MyCharityTransactions from "../Dashboard/charity/MyCharityTransactions";
 import CreatDonation from "../pages/CreatDonation";
+import AdminProfile from "../pages/admi/AdminProfile";
+import FeatureDonations from "../pages/admi/FeatureDonations";
+import ManageCharityRequests from "../pages/admi/ManageCharityRequests";
+import ManageDonations from "../pages/admi/ManageDonations";
+import ManageRoleRequests from "../pages/admi/ManageRoleRequests";
+import ManageUsers from "../pages/admi/ManageUsers";
 
 // Dashboard layout & pages
 
@@ -80,15 +86,20 @@ const router = createBrowserRouter([
 
       // CHARITY Routes
      { path: "charity-profile", element: <CharityProfile /> },
-{ path: "my-requests", element: <MyRequests /> },
-{ path: "my-pickups", element: <MyPickups/> },
-{ path: "received-donations", element: <ReceivedDonations /> },
-{ path: "my-charity-transactions", element: <MyCharityTransactions /> },
+     { path: "my-requests", element: <MyRequests /> },
+     { path: "my-pickups", element: <MyPickups/> },
+     { path: "received-donations", element: <ReceivedDonations /> },
+     { path: "my-charity-transactions", element: <MyCharityTransactions /> },
 
 
-      // USER Routes
-      // { path: "my-profile", element: <MyProfile /> },
-      // { path: "request-charity-role", element: <RequestCharity /> },
+      // Admin Routes
+      { path: "admin-profile", element: <AdminProfile /> },
+      { path: "feature-donations", element: <FeatureDonations /> },
+      { path: "manage-requests", element: <ManageCharityRequests /> },
+      { path: "manage-donations", element: <ManageDonations /> },
+      { path: "manage-role-requests", element: <ManageRoleRequests /> },
+      { path: "manage-users", element: <ManageUsers /> },
+
       
     ],
   },

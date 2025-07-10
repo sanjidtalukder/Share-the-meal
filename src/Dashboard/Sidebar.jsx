@@ -99,6 +99,33 @@ const Sidebar = () => {
           </NavLink>
         </div>
       {/* )} */}
+
+      {/* {role === "admin" && ( */}
+  <div className="bg-white p-4 rounded-lg shadow mb-6 space-y-2">
+    <h1 className="text-xl font-bold text-green-700 mb-3 flex items-center gap-2">
+      🛠️ Admin Panel
+    </h1>
+    <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/admin-profile">
+      <FaUserCircle /> Admin Profile
+    </NavLink>
+    <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/manage-donations">
+      <FaClipboardList /> Manage Donations
+    </NavLink>
+    <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/manage-users">
+      <FaUserCircle /> Manage Users
+    </NavLink>
+    <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/manage-role-requests">
+      <FaHandsHelping /> Role Requests
+    </NavLink>
+    <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/manage-requests">
+      <FaBoxes /> Manage Requests
+    </NavLink>
+    <NavLink className="flex items-center gap-2 hover:underline" to="/dashboard/feature-donations">
+      <FaStar /> Feature Donations
+    </NavLink>
+  </div>
+{/* )} */}
+
     </div>
   );
 };
