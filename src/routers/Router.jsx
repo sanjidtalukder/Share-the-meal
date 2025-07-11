@@ -55,7 +55,7 @@ const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
       { path: "donations", element: <AllDonations /> },
-      { path: "details", element: <DonationDetails /> },
+      { path: "/donations/:id", element: <DonationDetails /> },
       { path: "creat-donation", element: <CreatDonation /> },
     ],
   },

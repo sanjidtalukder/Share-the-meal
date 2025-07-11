@@ -1,7 +1,7 @@
 // pages/AllDonations.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import DonationCard from "../components/DonationCard";
+import DonationCard from "../components/DonationCard"; // ✅ You missed this line
 
 const AllDonations = () => {
   const [donations, setDonations] = useState([]);
@@ -21,7 +21,7 @@ const AllDonations = () => {
   }, []);
 
   return (
-    <div className="p-4 max-w-6xl h-screen mx-auto">
+    <div className="p-4 max-w-6xl min-h-screen mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-center">All Donations</h1>
       {loading ? (
         <p className="text-center">Loading...</p>
