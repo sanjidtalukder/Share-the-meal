@@ -47,9 +47,9 @@ const Navbar = () => {
             </NavLink>
           </li>
 
-         <li>
+          <li>
             <NavLink
-              to="creat-donation"
+              to="/creat-donation"
               className={({ isActive }) =>
                 isActive
                   ? "font-semibold underline text-yellow-300"
@@ -57,10 +57,10 @@ const Navbar = () => {
               }
               onClick={() => setDropdownOpen(false)}
             >
-             Creat Donation
+              Create Donation
             </NavLink>
           </li>
-           
+
           <li>
             <NavLink
               to="/dashboard"
@@ -99,36 +99,43 @@ const Navbar = () => {
     <div className="navbar bg-green-600 text-white shadow-md px-6 py-3">
       {/* Left: Logo */}
       <div className="navbar-start">
-        <Link
-          to="/"
-          className="flex items-center gap-3 text-2xl font-extrabold text-white"
-        >
+        <Link to="/" className="text-2xl font-extrabold">
           ZeroWasteMeals
         </Link>
       </div>
 
-      {/* Center: Menu Links (desktop) */}
+      {/* Center: Desktop Menu */}
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1 gap-6 font-medium">{navLinks}</ul>
+        <ul className="menu menu-horizontal px-1 gap-6 font-medium">
+          {navLinks}
+        </ul>
       </div>
 
-      {/* Right: User Info or Login */}
+      {/* Right: Profile + Logout */}
       <div className="navbar-end">
         {user ? (
           <div className="flex items-center gap-4">
-            <img
-              src={
-                user.photoURL ||
-                "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_hybrid&w=740"
-              }
-              alt={user.displayName || "User"}
-              title={user.displayName || "User"}
-              className="w-10 h-10 rounded-full border-2 border-white object-cover"
-            />
+            {/* Profile Image with Tooltip */}
+            <div className="relative group">
+              <img
+                src={
+                  user.photoURL ||
+                  "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg"
+                }
+                alt={user.displayName || "User"}
+                className="w-10 h-10 rounded-full border-2 border-white object-cover"
+              />
+              {/* Tooltip on hover */}
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-green-400 text-white text-xs px-3 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
+                <p>{user.displayName || "User"}</p>
+                <p>{user.email}</p>
+              </div>
+            </div>
+
+            {/* Logout Button */}
             <button
               onClick={handleLogout}
               className="btn btn-sm btn-outline border-white text-white hover:bg-white hover:text-green-700 flex items-center gap-2"
-              title="Logout"
             >
               <FaSignOutAlt />
               <span className="hidden sm:inline">Logout</span>
@@ -144,16 +151,15 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* Mobile Dropdown */}
-      <div className="dropdown dropdown-end lg:hidden relative">
+      {/* Mobile Menu Button */}
+      <div className="dropdown dropdown-end lg:hidden ml-2">
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
           className="btn btn-ghost btn-circle"
-          aria-label="Toggle menu"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-7 w-7 text-white"
+            className="h-6 w-6 text-white"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -172,10 +178,7 @@ const Navbar = () => {
         </button>
 
         {dropdownOpen && (
-          <ul
-            className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-green-700 text-white rounded-box w-52 absolute right-0 z-50"
-            onClick={() => setDropdownOpen(false)}
-          >
+          <ul className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-green-700 text-white rounded-box w-52 z-50">
             {navLinks}
             {user && (
               <li>
