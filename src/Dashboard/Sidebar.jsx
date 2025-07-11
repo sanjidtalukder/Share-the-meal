@@ -74,7 +74,7 @@ const Sidebar = () => {
             <FaBoxes /> Requested Donations
           </NavLink>
         </div>
-      {/* )} */}
+       {/* )}  */}
 
       {/* Charity Sidebar */}
       {/* {(role === "charity" || !role) && ( */}
@@ -98,9 +98,9 @@ const Sidebar = () => {
             <FaChartLine /> Transaction History
           </NavLink>
         </div>
-      {/* )} */}
-
-      {/* {role === "admin" && ( */}
+       {/* )}  */}
+{/* {(role === "charity" || !role) && ( */}
+      {/* {role === "admin"  && ( */}
   <div className="bg-white p-4 rounded-lg shadow mb-6 space-y-2">
     <h1 className="text-xl font-bold text-green-700 mb-3 flex items-center gap-2">
       🛠️ Admin Panel
@@ -124,7 +124,7 @@ const Sidebar = () => {
       <FaStar /> Feature Donations
     </NavLink>
   </div>
-{/* )} */}
+ {/* )}  */}
 
     </div>
   );

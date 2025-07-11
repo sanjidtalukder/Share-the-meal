@@ -27,10 +27,22 @@ const RequestCharityRole = () => {
 
   // Create payment intent
   useEffect(() => {
-    axios.post("http://localhost:5000/api/charity/create-payment-intent", { amount }).then(res => {
-      setClientSecret(res.data.clientSecret);
-    });
-  }, []);
+  if (user?.email) {
+    axios
+      .post("http://localhost:5000/api/role-request/create-payment-intent", {
+        amount,
+        email: user.email,
+      })
+      .then((res) => {
+        setClientSecret(res.data.clientSecret);
+      })
+      .catch((err) => {
+        toast.error("Failed to initialize payment");
+        console.error("Payment intent error:", err);
+      });
+  }
+}, [user?.email]);
+
 
   const onSubmit = async (data) => {
     setLoading(true);
