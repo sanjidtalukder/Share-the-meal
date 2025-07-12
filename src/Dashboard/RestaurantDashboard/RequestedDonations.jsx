@@ -1,78 +1,75 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { getAuth } from 'firebase/auth';
 
-const RequestedDonations = ({ user }) => {
-  const [requests, setRequests] = useState([]);
+const RestaurantProfile = () => {
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [unauthorized, setUnauthorized] = useState(false);
 
   useEffect(() => {
-    if (user?.email) {
-      axios.get(`/api/requests?restaurant=${user.email}`)
-        .then(res => setRequests(Array.isArray(res.data) ? res.data : []))
-        .catch(err => {
-          console.error("Error loading requests:", err);
-          setRequests([]);
-        })
-        .finally(() => setLoading(false));
-    }
-  }, [user]);
+    const fetchUser = async () => {
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
 
-  const handleAccept = async (request) => {
-    try {
-      await axios.put(`/api/requests/${request._id}`, { status: 'Accepted' });
-      await axios.put(`/api/requests/reject-others/${request.donationId}`, {
-        exclude: request._id
-      });
-      const updated = await axios.get(`/api/requests?restaurant=${user.email}`);
-      setRequests(Array.isArray(updated.data) ? updated.data : []);
-    } catch (err) {
-      console.error("Error updating request:", err);
-    }
-  };
+      if (!currentUser) {
+        setUnauthorized(true);
+        setLoading(false);
+        return;
+      }
 
-  const handleReject = async (id) => {
-    try {
-      await axios.put(`/api/requests/${id}`, { status: 'Rejected' });
-      setRequests(prev => prev.map(req => req._id === id ? { ...req, status: 'Rejected' } : req));
-    } catch (err) {
-      console.error("Error rejecting request:", err);
-    }
-  };
+      try {
+        const token = await currentUser.getIdToken();
 
-  if (loading) return <p className="p-4">Loading requests...</p>;
-  if (requests.length === 0) return <p className="p-4">No requests found.</p>;
+        const res = await axios.get('/api/users/me', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        // Ensure only restaurant role can access this profile
+        if (res.data.role !== 'restaurant') {
+          setUnauthorized(true);
+        } else {
+          setUser(res.data);
+        }
+      } catch (error) {
+        console.error("❌ Failed to load user profile:", error);
+        setUnauthorized(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  if (loading) return <p className="p-4">Loading restaurant profile...</p>;
+  if (unauthorized) return <p className="p-4 text-red-500">Access Denied. Only restaurants can view this page.</p>;
+  if (!user) return <p className="p-4 text-red-500">No profile data found.</p>;
 
   return (
-    <table className="w-full">
-      <thead>
-        <tr>
-          <th>Title</th><th>Type</th><th>Charity</th><th>Email</th>
-          <th>Description</th><th>Pickup Time</th><th>Status</th><th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {requests.map(req => (
-          <tr key={req._id}>
-            <td>{req.title}</td>
-            <td>{req.type}</td>
-            <td>{req.charityName}</td>
-            <td>{req.charityEmail}</td>
-            <td>{req.description}</td>
-            <td>{req.pickupTime}</td>
-            <td>{req.status}</td>
-            <td>
-              {req.status === "Pending" && (
-                <>
-                  <button onClick={() => handleAccept(req)} className="bg-green-500 text-white px-2 py-1 rounded mr-2">Accept</button>
-                  <button onClick={() => handleReject(req._id)} className="bg-red-500 text-white px-2 py-1 rounded">Reject</button>
-                </>
-              )}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="p-6 bg-white rounded shadow max-w-md mx-auto text-center">
+      {user.image && (
+        <img
+          src={user.image}
+          alt="Restaurant Logo"
+          className="w-32 h-32 object-cover mx-auto rounded-full border mb-4"
+        />
+      )}
+      <h2 className="text-2xl font-bold mb-1">{user.name}</h2>
+      <p className="text-sm text-gray-600 mb-3">(Restaurant)</p>
+
+      <div className="text-left text-sm space-y-2 text-gray-700">
+        <p><strong>Email:</strong> {user.email}</p>
+        {user.address && <p><strong>Address:</strong> {user.address}</p>}
+        {user.contact && <p><strong>Contact:</strong> {user.contact}</p>}
+        {user.createdAt && (
+          <p><strong>Joined:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
+        )}
+      </div>
+    </div>
   );
 };
 
-export default RequestedDonations;
+export default RestaurantProfile;
