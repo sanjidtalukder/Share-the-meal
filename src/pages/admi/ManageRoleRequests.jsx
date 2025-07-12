@@ -7,45 +7,83 @@ const ManageRoleRequests = () => {
 
   useEffect(() => {
     axios.get("http://localhost:5000/api/charity-requests")
-      .then(res => setRequests(res.data));
+      .then(res => setRequests(res.data))
+      .catch(err => toast.error("Failed to fetch requests"));
   }, []);
 
   const handleAction = async (id, action) => {
-    await axios.patch(`http://localhost:5000/api/charity-requests/${id}/${action}`);
-    toast.success(`Request ${action}ed`);
-    setRequests(prev => prev.filter(r => r._id !== id));
+    try {
+      await axios.patch(`http://localhost:5000/api/charity-requests/${id}/${action}`);
+      toast.success(`Request ${action}ed`);
+      setRequests(prev => prev.filter(r => r._id !== id));
+    } catch (error) {
+      toast.error(`Failed to ${action} request`);
+    }
   };
 
   return (
-    <div className="p-6 bg-white rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Manage Role Requests</h2>
-      <table className="w-full border">
-        <thead>
+    <div className="p-6 bg-white rounded-lg shadow-md max-w-full overflow-x-auto">
+      <h2 className="text-3xl font-semibold mb-6 text-gray-800">Manage Role Requests</h2>
+      
+      <table className="min-w-full border-collapse border border-gray-200">
+        <thead className="bg-gray-100">
           <tr>
-            <th className="p-2">User</th>
-            <th className="p-2">Email</th>
-            <th className="p-2">Org Name</th>
-            <th className="p-2">Mission</th>
-            <th className="p-2">Txn ID</th>
-            <th className="p-2">Status</th>
-            <th className="p-2">Actions</th>
+            {["User", "Email", "Org Name", "Mission", "Txn ID", "Status", "Actions"].map((header) => (
+              <th
+                key={header}
+                className="border border-gray-300 text-left px-4 py-3 text-sm font-medium text-gray-600 uppercase tracking-wide"
+              >
+                {header}
+              </th>
+            ))}
           </tr>
         </thead>
+
         <tbody>
+          {requests.length === 0 && (
+            <tr>
+              <td colSpan="7" className="text-center p-6 text-gray-500">
+                No role requests found.
+              </td>
+            </tr>
+          )}
+
           {requests.map(req => (
-            <tr key={req._id}>
-              <td className="p-2">{req.name}</td>
-              <td className="p-2">{req.email}</td>
-              <td className="p-2">{req.orgName}</td>
-              <td className="p-2">{req.mission}</td>
-              <td className="p-2">{req.transactionId}</td>
-              <td className="p-2">{req.status}</td>
-              <td className="p-2 space-x-2">
+            <tr
+              key={req._id}
+              className="hover:bg-gray-50 transition-colors duration-200"
+            >
+              <td className="border border-gray-300 px-4 py-3 text-gray-700">{req.name}</td>
+              <td className="border border-gray-300 px-4 py-3 text-gray-700">{req.email}</td>
+              <td className="border border-gray-300 px-4 py-3 text-gray-700">{req.organization}</td>
+              <td className="border border-gray-300 px-4 py-3 text-gray-700 max-w-xs truncate" title={req.mission}>{req.mission}</td>
+              <td className="border border-gray-300 px-4 py-3 text-gray-700">{req.transactionId}</td>
+              <td className={`border border-gray-300 px-4 py-3 font-semibold ${
+                req.status === "Approved" ? "text-green-600" : 
+                req.status === "Rejected" ? "text-red-600" : 
+                "text-yellow-600"
+              }`}>
+                {req.status}
+              </td>
+              <td className="border border-gray-300 px-4 py-3 space-x-2">
                 {req.status === "Pending" && (
                   <>
-                    <button onClick={() => handleAction(req._id, "approve")} className="bg-green-500 text-white px-2 py-1 rounded">Approve</button>
-                    <button onClick={() => handleAction(req._id, "reject")} className="bg-red-500 text-white px-2 py-1 rounded">Reject</button>
+                    <button
+                      onClick={() => handleAction(req._id, "approve")}
+                      className="bg-green-600 hover:bg-green-700 transition-colors text-white px-3 py-1 rounded-md text-sm font-medium"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      onClick={() => handleAction(req._id, "reject")}
+                      className="bg-red-600 hover:bg-red-700 transition-colors text-white px-3 py-1 rounded-md text-sm font-medium"
+                    >
+                      Reject
+                    </button>
                   </>
+                )}
+                {(req.status === "Approved" || req.status === "Rejected") && (
+                  <span className="text-gray-500 italic">{req.status}</span>
                 )}
               </td>
             </tr>
