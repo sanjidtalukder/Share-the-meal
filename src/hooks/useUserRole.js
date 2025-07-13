@@ -9,13 +9,14 @@ const useUserRole = () => {
   const { data: role, isLoading } = useQuery({
     queryKey: ["user-role", user?.email],
     queryFn: async () => {
-      const res = await axios.get(`/api/users?email=${user.email}`);
-      return res.data?.role || "user";
+      const res = await axios.get(`http://localhost:5000/api/users?email=${user.email}`);
+      console.log("API Response:", res.data);
+      return res.data?.role ?? null;
     },
     enabled: !!user?.email,
   });
 
-  return [role, isLoading];
+  return [role, isLoading]; 
 };
 
 export default useUserRole;
