@@ -8,8 +8,11 @@ const DonationCard = ({ donation }) => {
     title,
     charityName,
     status,
-    restaurant: { name: restaurantName, location },
+    restaurant,
   } = donation;
+
+  const restaurantName = restaurant?.name || "Unknown";
+  const location = restaurant?.location || "Unknown";
 
   return (
     <div className="rounded-xl border-2 border-green-400 overflow-hidden bg-white shadow-2xl">
@@ -47,4 +50,5 @@ const DonationCard = ({ donation }) => {
     </div>
   );
 };
+
 export default DonationCard;

@@ -1,136 +1,183 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { getAuth } from 'firebase/auth';
+import { useState } from "react";
+import axios from "axios";
+import { getAuth } from "firebase/auth";
+import { FaUtensils, FaPlusCircle } from "react-icons/fa";
+import { GiFoodTruck } from "react-icons/gi";
 
 const AddDonation = () => {
-  const [form, setForm] = useState({
-    title: '',
-    type: '',
-    quantity: '',
-    pickupTime: '',
-    location: '',
-    image: ''
+  const [formData, setFormData] = useState({
+    title: "",
+    image: null, // file
+    description: "",
+    quantity: "",
+    pickupTime: "",
+    location: "",
+    restaurantName: "",
   });
-  const [user, setUser] = useState(null);
+
   const [loading, setLoading] = useState(false);
 
-  // ✅ Get logged in user info from Firebase
-  useEffect(() => {
-    const auth = getAuth();
-    const currentUser = auth.currentUser;
-    if (currentUser) {
-      setUser({
-        name: currentUser.displayName || "Anonymous",
-        email: currentUser.email
-      });
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "image") {
+      setFormData({ ...formData, image: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
     }
-  }, []);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    if (!user?.name || !user?.email) {
-      alert("User info missing!");
-      return;
-    }
-
-    const data = {
-      ...form,
-      restaurantName: user.name,
-      restaurantEmail: user.email
-    };
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const token = await user.getIdToken();
 
     try {
-      setLoading(true);
-     await axios.post('/api/donations', data);
+      //  Upload image to imgbb
+      const imgData = new FormData();
+      imgData.append("image", formData.image);
 
-      alert('✅ Donation added successfully!');
-      setForm({
-        title: '',
-        type: '',
-        quantity: '',
-        pickupTime: '',
-        location: '',
-        image: ''
+      const imgbbRes = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
+        imgData
+      );
+
+      const imageUrl = imgbbRes.data.data.url;
+
+     
+      // postData
+const postData = {
+  title: formData.title,
+  image: imageUrl,
+  description: formData.description,
+  quantity: formData.quantity,
+  pickupTime: formData.pickupTime,
+  restaurant: {
+    name: formData.restaurantName,
+    email: user.email,
+    location: formData.location, 
+  },
+};
+
+
+
+      // ✅ Post to backend
+      await axios.post("http://localhost:5000/api/donations", postData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
-    } catch (err) {
-      console.error("❌ Error adding donation:", err);
-      alert("Failed to add donation.");
+
+      alert("✅ Donation submitted for admin review.");
+      setFormData({
+        title: "",
+        image: null,
+        description: "",
+        quantity: "",
+        pickupTime: "",
+        location: "",
+        restaurantName: "",
+      });
+    } catch (error) {
+      console.error(error);
+      alert("❌ Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (!user) {
-    return <p className="text-center p-6 text-red-500">❌ Please login first to add a donation.</p>;
-  }
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-md mx-auto bg-white shadow-md rounded-lg p-6 space-y-4"
-    >
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
-        Add a Donation
-      </h2>
+    <div className="max-w-3xl mx-auto px-6 py-10">
+      <div className="bg-white rounded-xl shadow-lg p-8">
+        <h2 className="flex items-center justify-center text-3xl font-bold text-green-600 mb-8 gap-2">
+          <GiFoodTruck className="text-green-500" />
+          Create a Food Donation
+          <FaUtensils className="text-green-500" />
+        </h2>
 
-      <input
-        placeholder="Title"
-        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
-        value={form.title}
-        onChange={(e) => setForm({ ...form, title: e.target.value })}
-        required
-      />
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5">
+          <input
+            name="restaurantName"
+            onChange={handleChange}
+            placeholder="Restaurant Name"
+            required
+            className="w-full px-4 py-2 border rounded-md"
+            value={formData.restaurantName}
+          />
 
-      <input
-        placeholder="Type"
-        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
-        value={form.type}
-        onChange={(e) => setForm({ ...form, type: e.target.value })}
-        required
-      />
+          <input
+            name="title"
+            onChange={handleChange}
+            placeholder="Donation Title"
+            required
+            className="w-full px-4 py-2 border rounded-md"
+            value={formData.title}
+          />
 
-      <input
-        placeholder="Quantity"
-        type="number"
-        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
-        value={form.quantity}
-        onChange={(e) => setForm({ ...form, quantity: e.target.value })}
-        required
-      />
+          <input
+            name="image"
+            type="file"
+            accept="image/*"
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border rounded-md bg-gray-50"
+          />
 
-      <input
-        placeholder="Pickup Time"
-        type="time"
-        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
-        value={form.pickupTime}
-        onChange={(e) => setForm({ ...form, pickupTime: e.target.value })}
-        required
-      />
+          <textarea
+            name="description"
+            onChange={handleChange}
+            placeholder="Describe the food donation..."
+            required
+            rows="3"
+            className="w-full px-4 py-2 border rounded-md"
+            value={formData.description}
+          />
 
-      <input
-        placeholder="Location"
-        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
-        value={form.location}
-        onChange={(e) => setForm({ ...form, location: e.target.value })}
-        required
-      />
+          <div className="grid grid-cols-2 gap-4">
+            <input
+              name="quantity"
+              onChange={handleChange}
+              placeholder="e.g., 20 plates"
+              required
+              className="w-full px-4 py-2 border rounded-md"
+              value={formData.quantity}
+            />
 
-      <input
-        type="file"
-        className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 cursor-pointer"
-        onChange={(e) => setForm({ ...form, image: e.target.files[0]?.name || '' })}
-      />
+            <input
+              name="pickupTime"
+              type="datetime-local"
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border rounded-md"
+              value={formData.pickupTime}
+            />
+          </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className={`w-full font-semibold py-3 rounded-lg transition duration-300 
-        ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
-      >
-        {loading ? "Submitting..." : "Submit Donation"}
-      </button>
-    </form>
+          <input
+            name="location"
+            onChange={handleChange}
+            placeholder="Pickup Location"
+            className="w-full px-4 py-2 border rounded-md"
+            value={formData.location}
+          />
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={`mt-4 w-full flex items-center justify-center gap-2 font-semibold py-2 rounded-md transition ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-green-500 hover:bg-green-600 text-white"
+            }`}
+          >
+            <FaPlusCircle className="text-white text-lg" />
+            {loading ? "Submitting..." : "Submit Donation"}
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 
