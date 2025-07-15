@@ -4,72 +4,123 @@ import toast from "react-hot-toast";
 
 const ManageDonations = () => {
   const [donations, setDonations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [processingId, setProcessingId] = useState(null);
 
- useEffect(() => {
-  axios.get("http://localhost:5000/api/donations?status=Pending")
-    .then(res => setDonations(res.data))
-    .catch(err => console.error("Failed to fetch donations", err));
-}, []);
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/donations?status=Pending")
+      .then(res => setDonations(res.data))
+      .catch(err => {
+        console.error("Failed to fetch donations", err);
+        toast.error("Failed to load donations");
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleVerify = async (id) => {
-  try {
-    await axios.put(`http://localhost:5000/api/donations/verify/${id}`);
-    toast.success("Donation verified!");
-    setDonations(prev => prev.filter(d => d._id !== id));
-  } catch (err) {
-    console.error("Verification failed:", err);
-    toast.error("Could not verify donation.");
-  }
-};
+    try {
+      setProcessingId(id);
+      await axios.put(`http://localhost:5000/api/donations/verify/${id}`);
+      toast.success("Donation verified!");
+      setDonations(prev => prev.filter(d => d._id !== id));
+    } catch (err) {
+      console.error("Verification failed:", err);
+      toast.error("Could not verify donation.");
+    } finally {
+      setProcessingId(null);
+    }
+  };
 
   const handleReject = async (id) => {
-  try {
-    await axios.put(`http://localhost:5000/api/donations/reject/${id}`);
-    toast.error("Donation rejected.");
-    setDonations(prev => prev.filter(d => d._id !== id));
-  } catch (err) {
-    console.error("Rejection failed", err);
-    toast.error("Error rejecting donation");
-  }
-};
+    try {
+      setProcessingId(id);
+      await axios.put(`http://localhost:5000/api/donations/reject/${id}`);
+      toast.error("Donation rejected.");
+      setDonations(prev => prev.filter(d => d._id !== id));
+    } catch (err) {
+      console.error("Rejection failed", err);
+      toast.error("Error rejecting donation");
+    } finally {
+      setProcessingId(null);
+    }
+  };
 
   return (
-    <div className="p-6 bg-white rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Manage Donations</h2>
-      <table className="w-full border">
-        <thead>
-          <tr className="bg-gray-100 text-left">
-            <th className="p-2">Title</th>
-            <th className="p-2">Food Type</th>
-            <th className="p-2">Restaurant</th>
-            <th className="p-2">Email</th>
-            <th className="p-2">Qty</th>
-            <th className="p-2">Status</th>
-            <th className="p-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {donations.map(donation => (
-            <tr key={donation._id} className="border-t">
-              <td className="p-2">{donation.title}</td>
-              <td className="p-2">{donation.foodType}</td>
-<td className="p-2">{donation.restaurant?.name}</td>
-<td className="p-2">{donation.restaurant?.email}</td>
+    <div className="p-6 bg-white rounded-2xl shadow-xl max-w-7xl mx-auto">
+      <h2 className="text-3xl font-bold mb-6 text-gray-800">📦 Manage Pending Donations</h2>
 
-              <td className="p-2">{donation.quantity}</td>
-              <td className="p-2">{donation.status}</td>
-              <td className="p-2 space-x-2">
-                {donation.status === "Pending" && (
-                  <>
-                    <button onClick={() => handleVerify(donation._id)} className="bg-green-500 text-white px-2 py-1 rounded">Verify</button>
-                    <button onClick={() => handleReject(donation._id)} className="bg-red-500 text-white px-2 py-1 rounded">Reject</button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {loading ? (
+        <p className="text-center text-gray-500">Loading donations...</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm text-left">
+            <thead>
+              <tr className="bg-gray-100 text-gray-700">
+                <th className="p-3">Title</th>
+                <th className="p-3">Food Type</th>
+                <th className="p-3">Restaurant</th>
+                <th className="p-3">Email</th>
+                <th className="p-3">Qty</th>
+                <th className="p-3">Status</th>
+                <th className="p-3 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {donations.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="text-center py-6 text-gray-500">
+                    No pending donations found.
+                  </td>
+                </tr>
+              ) : (
+                donations.map(donation => (
+                  <tr key={donation._id} className="hover:bg-gray-50">
+                    <td className="p-3">{donation.title}</td>
+                    <td className="p-3">{donation.foodType}</td>
+                    <td className="p-3">{donation.restaurant?.name}</td>
+                    <td className="p-3">{donation.restaurant?.email}</td>
+                    <td className="p-3">{donation.quantity}</td>
+                    <td className="p-3">
+                      <span className="inline-block px-2 py-1 rounded bg-yellow-100 text-yellow-700 text-xs font-medium">
+                        {donation.status}
+                      </span>
+                    </td>
+                    <td className="p-3 text-center space-x-2">
+                      {donation.status === "Pending" && (
+                        <>
+                          <button
+                            onClick={() => handleVerify(donation._id)}
+                            disabled={processingId === donation._id}
+                            className={`px-3 py-1 rounded text-white font-medium transition ${
+                              processingId === donation._id
+                                ? "bg-green-300 cursor-not-allowed"
+                                : "bg-green-500 hover:bg-green-600"
+                            }`}
+                          >
+                            {processingId === donation._id ? "Verifying..." : "Verify"}
+                          </button>
+                          <button
+                            onClick={() => handleReject(donation._id)}
+                            disabled={processingId === donation._id}
+                            className={`px-3 py-1 rounded text-white font-medium transition ${
+                              processingId === donation._id
+                                ? "bg-red-300 cursor-not-allowed"
+                                : "bg-red-500 hover:bg-red-600"
+                            }`}
+                          >
+                            {processingId === donation._id ? "Rejecting..." : "Reject"}
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
