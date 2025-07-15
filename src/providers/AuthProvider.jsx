@@ -46,7 +46,7 @@ const AuthProvider = ({ children }) => {
     return signOut(auth);
   };
 
-  useEffect(() => {
+ useEffect(() => {
   const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
     setUser(currentUser);
 
@@ -54,19 +54,36 @@ const AuthProvider = ({ children }) => {
       const idToken = await currentUser.getIdToken();
       setToken(idToken);
 
-      // ✅ এখানে user কে MongoDB-তে save করো
       try {
-        await axios.post("http://localhost:5000/api/users", {
-          name: currentUser.displayName || "Unknown",
-          email: currentUser.email,
-          photo: currentUser.photoURL || null,
-        });
-        console.log("✅ User saved to MongoDB");
+        const response = await axios.get(`http://localhost:5000/api/users?email=${currentUser.email}`);
+        if (response.status === 200) {
+          console.log("✅ User exists in MongoDB");
+        } else {
+          // Normally 404 হবে, তাই POST করবো
+          await axios.post("http://localhost:5000/api/users", {
+            name: currentUser.displayName || "Unknown",
+            email: currentUser.email,
+            photo: currentUser.photoURL || null,
+          });
+          console.log("✅ User saved to MongoDB");
+        }
       } catch (err) {
-        if (err.response?.status === 409) {
+        if (err.response?.status === 404) {
+          // ইউজার না পাওয়া গেলে POST করো
+          try {
+            await axios.post("http://localhost:5000/api/users", {
+              name: currentUser.displayName || "Unknown",
+              email: currentUser.email,
+              photo: currentUser.photoURL || null,
+            });
+            console.log("✅ User saved to MongoDB");
+          } catch (postErr) {
+            console.error("❌ Error saving user:", postErr.message);
+          }
+        } else if (err.response?.status === 409) {
           console.log("⚠️ User already exists in MongoDB");
         } else {
-          console.error("❌ Error saving user:", err.message);
+          console.error("❌ Error fetching user:", err.message);
         }
       }
     } else {
@@ -78,6 +95,8 @@ const AuthProvider = ({ children }) => {
 
   return () => unsubscribe();
 }, []);
+
+
 
 
   const authInfo = {
