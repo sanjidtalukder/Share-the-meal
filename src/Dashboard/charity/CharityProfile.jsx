@@ -4,6 +4,7 @@ import { getAuth } from 'firebase/auth';
 
 const CharityProfile = () => {
   const [user, setUser] = useState({});
+  const [photoURL, setPhotoURL] = useState("");
   const [loading, setLoading] = useState(true);
   const [unauthorized, setUnauthorized] = useState(false);
 
@@ -13,28 +14,36 @@ const CharityProfile = () => {
       const currentUser = auth.currentUser;
 
       if (!currentUser) {
-        console.log(" User not logged in");
+        console.log("User not logged in");
         setUnauthorized(true);
+        setLoading(false);
         return;
       }
 
       try {
         const token = await currentUser.getIdToken();
+        console.log("🟢 Current user:", currentUser.email);
+        console.log("🟢 Token:", token);
 
-        const res = await axios.get("/api/users/me", {
+        setPhotoURL(currentUser.photoURL); // ✅ save fallback Gmail image
+
+        const res = await axios.get("http://localhost:5000/api/charity-requests/profile", {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
 
-        if (res.data.role !== "charity") {
-          console.log(" Not a charity user");
+        console.log("🟢 Response from backend:", res.data);
+
+        if (!res.data || res.data.role !== "charity") {
+          console.log("🔴 Not a charity user");
           setUnauthorized(true);
         } else {
           setUser(res.data);
         }
+
       } catch (err) {
-        console.error(" Error fetching user:", err.response?.data || err.message);
+        console.error("❌ Error fetching user:", err.response?.data || err.message);
         setUnauthorized(true);
       } finally {
         setLoading(false);
@@ -52,7 +61,7 @@ const CharityProfile = () => {
       <h2 className="text-2xl font-bold mb-4 text-center">Charity Profile</h2>
       <div className="flex flex-col items-center text-center">
         <img
-          src={user.image || user.photo}
+          src={user.image || user.userImage || user.photo || photoURL || "https://via.placeholder.com/150"}
           alt="Charity Logo"
           className="w-24 h-24 object-cover rounded-full mb-4 border"
         />
@@ -60,7 +69,6 @@ const CharityProfile = () => {
         <p className="mb-1"><strong>Email:</strong> {user.email}</p>
         <p className="mb-1"><strong>Role:</strong> {user.role}</p>
         <p className="mb-1"><strong>Mission:</strong> {user.mission || "N/A"}</p>
-        <p className="mb-1"><strong>Contact:</strong> {user.contact || "N/A"}</p>
       </div>
     </div>
   );
