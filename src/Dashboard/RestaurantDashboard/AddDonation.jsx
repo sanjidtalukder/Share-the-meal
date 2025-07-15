@@ -10,6 +10,7 @@ const AddDonation = () => {
     image: null, // file
     description: "",
     quantity: "",
+    footType: "",
     pickupTime: "",
     location: "",
     restaurantName: "",
@@ -53,6 +54,7 @@ const postData = {
   image: imageUrl,
   description: formData.description,
   quantity: formData.quantity,
+  
   pickupTime: formData.pickupTime,
   restaurant: {
     name: formData.restaurantName,
@@ -79,7 +81,8 @@ const postData = {
         pickupTime: "",
         location: "",
         restaurantName: "",
-      });
+        foodType:"",
+            });
     } catch (error) {
       console.error(error);
       alert("❌ Something went wrong. Please try again.");

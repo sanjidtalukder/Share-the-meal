@@ -53,8 +53,9 @@ const ManageDonations = () => {
             <tr key={donation._id} className="border-t">
               <td className="p-2">{donation.title}</td>
               <td className="p-2">{donation.foodType}</td>
-              <td className="p-2">{donation.restaurantName}</td>
-              <td className="p-2">{donation.restaurantEmail}</td>
+<td className="p-2">{donation.restaurant?.name}</td>
+<td className="p-2">{donation.restaurant?.email}</td>
+
               <td className="p-2">{donation.quantity}</td>
               <td className="p-2">{donation.status}</td>
               <td className="p-2 space-x-2">
