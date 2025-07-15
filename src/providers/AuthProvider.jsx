@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase/src/firebase/firebase.config";
+import axios from "axios";
 
 export const AuthContext = createContext(null);
 
@@ -46,20 +47,38 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    setUser(currentUser);
 
-      if (currentUser) {
-        const idToken = await currentUser.getIdToken();  // <-- token পাওয়া গেল
-        setToken(idToken);
-      } else {
-        setToken(null);
+    if (currentUser) {
+      const idToken = await currentUser.getIdToken();
+      setToken(idToken);
+
+      // ✅ এখানে user কে MongoDB-তে save করো
+      try {
+        await axios.post("http://localhost:5000/api/users", {
+          name: currentUser.displayName || "Unknown",
+          email: currentUser.email,
+          photo: currentUser.photoURL || null,
+        });
+        console.log("✅ User saved to MongoDB");
+      } catch (err) {
+        if (err.response?.status === 409) {
+          console.log("⚠️ User already exists in MongoDB");
+        } else {
+          console.error("❌ Error saving user:", err.message);
+        }
       }
+    } else {
+      setToken(null);
+    }
 
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+    setLoading(false);
+  });
+
+  return () => unsubscribe();
+}, []);
+
 
   const authInfo = {
     user,

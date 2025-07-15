@@ -1,44 +1,47 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { getAuth } from "firebase/auth";
 import toast from "react-hot-toast";
 import DonationCard from "../components/DonationCard";
+import { getAuth } from "firebase/auth";
 
 const AllDonations = () => {
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchDonations = async () => {
-      try {
-        const auth = getAuth();
-        const user = auth.currentUser;
 
-        if (!user) {
-          toast.error("Please login to view donations.");
-          setLoading(false);
-          return;
-        }
 
-        const token = await user.getIdToken();
+useEffect(() => {
+  const fetchDonations = async () => {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
 
-        const res = await axios.get("http://localhost:5000/api/donations?status=Verified", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setDonations(res.data);
-      } catch (err) {
-        console.error("Error fetching donations", err);
-        toast.error("Unauthorized access or server error");
-      } finally {
+      if (!user) {
+        toast.error("Please login to view donations.");
         setLoading(false);
+        return;
       }
-    };
 
-    fetchDonations();
-  }, []);
+      const token = await user.getIdToken();
+
+      const res = await axios.get("http://localhost:5000/api/donations?status=Verified", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      setDonations(res.data);
+    } catch (err) {
+      console.error("Error fetching donations", err);
+      toast.error("Unauthorized or error occurred.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchDonations();
+}, []);
+
 
   return (
     <div className="p-4 max-w-6xl min-h-screen mx-auto">
