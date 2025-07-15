@@ -1,29 +1,39 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { AuthContext } from "../../providers/AuthProvider";
 
 const ManageDonations = () => {
+  const { token } = useContext(AuthContext); // 🔐 token আনলাম
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState(null);
 
   useEffect(() => {
+    if (!token) return;
+
+      console.log("Using token:", token);
+
     axios
-      .get("http://localhost:5000/api/donations?status=Pending")
-      .then(res => setDonations(res.data))
-      .catch(err => {
+      .get("http://localhost:5000/api/donations?status=Pending", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => setDonations(res.data))
+      .catch((err) => {
         console.error("Failed to fetch donations", err);
         toast.error("Failed to load donations");
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [token]);
 
   const handleVerify = async (id) => {
     try {
       setProcessingId(id);
-      await axios.put(`http://localhost:5000/api/donations/verify/${id}`);
+      await axios.put(`http://localhost:5000/api/donations/verify/${id}`, null, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       toast.success("Donation verified!");
-      setDonations(prev => prev.filter(d => d._id !== id));
+      setDonations((prev) => prev.filter((d) => d._id !== id));
     } catch (err) {
       console.error("Verification failed:", err);
       toast.error("Could not verify donation.");
@@ -35,9 +45,11 @@ const ManageDonations = () => {
   const handleReject = async (id) => {
     try {
       setProcessingId(id);
-      await axios.put(`http://localhost:5000/api/donations/reject/${id}`);
+      await axios.put(`http://localhost:5000/api/donations/reject/${id}`, null, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       toast.error("Donation rejected.");
-      setDonations(prev => prev.filter(d => d._id !== id));
+      setDonations((prev) => prev.filter((d) => d._id !== id));
     } catch (err) {
       console.error("Rejection failed", err);
       toast.error("Error rejecting donation");
@@ -74,7 +86,7 @@ const ManageDonations = () => {
                   </td>
                 </tr>
               ) : (
-                donations.map(donation => (
+                donations.map((donation) => (
                   <tr key={donation._id} className="hover:bg-gray-50">
                     <td className="p-3">{donation.title}</td>
                     <td className="p-3">{donation.foodType}</td>

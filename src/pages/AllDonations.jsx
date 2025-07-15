@@ -1,23 +1,43 @@
-// pages/AllDonations.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import DonationCard from "../components/DonationCard"; // ✅ You missed this line
+import { getAuth } from "firebase/auth";
+import toast from "react-hot-toast";
+import DonationCard from "../components/DonationCard";
 
 const AllDonations = () => {
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/donations?status=Verified")
-      .then((res) => {
+    const fetchDonations = async () => {
+      try {
+        const auth = getAuth();
+        const user = auth.currentUser;
+
+        if (!user) {
+          toast.error("Please login to view donations.");
+          setLoading(false);
+          return;
+        }
+
+        const token = await user.getIdToken();
+
+        const res = await axios.get("http://localhost:5000/api/donations?status=Verified", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         setDonations(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Error fetching donations", err);
+        toast.error("Unauthorized access or server error");
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchDonations();
   }, []);
 
   return (

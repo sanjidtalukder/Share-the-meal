@@ -1,12 +1,16 @@
-import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  updateProfile
+} from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase/src/firebase/firebase.config";
 
-
 export const AuthContext = createContext(null);
-
-
-// const auth = getAuth(app);
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -18,6 +22,7 @@ const updateUserProfile = async ({ displayName, photoURL }) => {
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);  // <-- token state যোগ করলাম
   const [loading, setLoading] = useState(true);
 
   const createUser = (email, password) => {
@@ -41,8 +46,16 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+
+      if (currentUser) {
+        const idToken = await currentUser.getIdToken();  // <-- token পাওয়া গেল
+        setToken(idToken);
+      } else {
+        setToken(null);
+      }
+
       setLoading(false);
     });
     return () => unsubscribe();
@@ -50,6 +63,7 @@ const AuthProvider = ({ children }) => {
 
   const authInfo = {
     user,
+    token,     // <-- token context এ যোগ করলাম
     loading,
     createUser,
     signIn,

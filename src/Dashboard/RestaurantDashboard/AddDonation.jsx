@@ -28,68 +28,62 @@ const AddDonation = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  e.preventDefault();
+  setLoading(true);
 
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const token = await user.getIdToken();
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const token = await user.getIdToken();
 
-    try {
-      //  Upload image to imgbb
-      const imgData = new FormData();
-      imgData.append("image", formData.image);
+  try {
+    // Upload image to imgbb
+    const imgData = new FormData();
+    imgData.append("image", formData.image);
 
-      const imgbbRes = await axios.post(
-        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
-        imgData
-      );
+    const imgbbRes = await axios.post(
+      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
+      imgData
+    );
 
-      const imageUrl = imgbbRes.data.data.url;
+    const imageUrl = imgbbRes.data.data.url;
 
-     
-      // postData
-const postData = {
-  title: formData.title,
-  image: imageUrl,
-  description: formData.description,
-  quantity: formData.quantity,
-  
-  pickupTime: formData.pickupTime,
-  restaurant: {
-    name: formData.restaurantName,
-    email: user.email,
-    location: formData.location, 
-  },
+    const postData = {
+      title: formData.title,
+      image: imageUrl,
+      description: formData.description,
+      quantity: formData.quantity,
+      foodType: formData.foodType,
+      pickupTime: formData.pickupTime,
+      restaurant: {
+        name: formData.restaurantName,
+        email: user.email,
+        location: formData.location,
+      },
+    };
+
+    await axios.post("http://localhost:5000/api/donations", postData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    alert("✅ Donation submitted for admin review.");
+    setFormData({
+      title: "",
+      image: null,
+      description: "",
+      quantity: "",
+      foodType: "",
+      pickupTime: "",
+      location: "",
+      restaurantName: "",
+    });
+  } catch (error) {
+    console.error(error);
+    alert("❌ Something went wrong. Please try again.");
+  } finally {
+    setLoading(false);
+  }
 };
 
-
-
-      // ✅ Post to backend
-      await axios.post("http://localhost:5000/api/donations", postData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      alert("✅ Donation submitted for admin review.");
-      setFormData({
-        title: "",
-        image: null,
-        description: "",
-        quantity: "",
-        pickupTime: "",
-        location: "",
-        restaurantName: "",
-        foodType:"",
-            });
-    } catch (error) {
-      console.error(error);
-      alert("❌ Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-10">
