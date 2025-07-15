@@ -1,69 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../providers/AuthProvider';
 
-const MyDonations = ({ user }) => {
+const MyDonations = () => {
+  const { user, token } = useContext(AuthContext); // ✅ user.email + token থাকা লাগবে
   const [donations, setDonations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user?.email) {
-      axios.get(`/api/donations?email=${user.email}`)
-        .then(res => {
-          // if it is array then it is set if not fallback
-          const data = Array.isArray(res.data) ? res.data
-                     : Array.isArray(res.data.data) ? res.data.data
-                     : [];
-          setDonations(data);
-        })
-        .catch(err => {
-          console.error("Failed to load donations:", err);
-          setDonations([]); // fallback to empty
-        })
-        .finally(() => setLoading(false));
-    }
-  }, [user]);
+ useEffect(() => {
+  if (user?.email && token) {
+    console.log("🔍 Email sending to API:", user.email);
+    axios.get(`http://localhost:5000/api/donations?email=${user.email}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(res => {
+      console.log("✅ Data received:", res.data);
+      setDonations(res.data);
+    })
+    .catch(err => console.error("Error fetching donations:", err));
+  }
+}, [user, token]);
 
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`/api/donations/${id}`);
-      setDonations(prev => prev.filter(d => d._id !== id));
-    } catch (err) {
-      console.error("Delete failed:", err);
-    }
-  };
-
-  if (loading) return <p className="p-4">Loading donations...</p>;
-  if (!Array.isArray(donations) || donations.length === 0)
-    return <p className="p-4">No donations found.</p>;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-      {donations.map(d => (
-        <div key={d._id} className="p-4 shadow rounded bg-white">
-          <img src={d.image} alt={d.title} className="h-32 w-full object-cover rounded" />
-          <h3 className="text-lg font-semibold mt-2">{d.title}</h3>
-          <p>{d.type} - {d.quantity}</p>
-          <p className="text-sm">Status: <span className="font-medium">{d.status}</span></p>
-          <div className="mt-2 flex gap-2">
-            {d.status !== "Rejected" && (
-              <button
-                onClick={() => navigate(`/dashboard/restaurant/update/${d._id}`)}
-                className="bg-blue-500 text-white px-3 py-1 rounded"
-              >
-                Update
-              </button>
-            )}
-            <button
-              onClick={() => handleDelete(d._id)}
-              className="bg-red-500 text-white px-3 py-1 rounded"
-            >
-              Delete
-            </button>
-          </div>
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">My Donations</h2>
+      {donations.length === 0 ? (
+        <p>No donations found.</p>
+      ) : (
+        <div className="grid md:grid-cols-2 gap-4">
+          {donations.map((d) => (
+            <div key={d._id} className="border p-4 rounded">
+              <img src={d.image} alt={d.title} className="h-32 w-full object-cover rounded" />
+              <h3 className="font-bold mt-2">{d.title}</h3>
+              <p>{d.description}</p>
+              <p><strong>Status:</strong> {d.status}</p>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 };
