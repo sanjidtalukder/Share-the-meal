@@ -1,7 +1,10 @@
-import { useState } from "react";
-import axios from "axios";
+import { useEffect, useState, useContext } from "react";
 import { getAuth } from "firebase/auth";
-import { FaUtensils, FaPlusCircle } from "react-icons/fa"; // React Icons
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../providers/AuthProvider";
+import { FaUtensils, FaPlusCircle } from "react-icons/fa";
 import { GiFoodTruck } from "react-icons/gi";
 
 const CreateDonation = () => {
@@ -15,6 +18,26 @@ const CreateDonation = () => {
     restaurantName: "",
   });
 
+  const [userRole, setUserRole] = useState(null);
+  const [loadingRole, setLoadingRole] = useState(true);
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?.email) {
+      axios
+        .get(`http://localhost:5000/api/users?email=${user.email}`)
+        .then((res) => {
+          setUserRole(res.data.role);
+          setLoadingRole(false);
+        })
+        .catch(() => {
+          toast.error("Failed to fetch user role");
+          setLoadingRole(false);
+        });
+    }
+  }, [user]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -22,15 +45,26 @@ const CreateDonation = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (loadingRole) {
+      toast.error("User role is still loading. Please wait.");
+      return;
+    }
+
+    if (userRole === "user") {
+      toast.error("Only charities or restaurants can donate. Please upgrade your role.");
+      return navigate("/request-charity-role");
+    }
+
     const auth = getAuth();
-    const user = auth.currentUser;
-    const token = await user.getIdToken();
+    const currentUser = auth.currentUser;
+    const token = await currentUser.getIdToken();
 
     const postData = {
       ...formData,
       restaurant: {
         name: formData.restaurantName,
-        email: user.email,
+        email: currentUser.email,
         location: formData.location,
       },
     };
@@ -41,10 +75,10 @@ const CreateDonation = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      alert(" Donation submitted for admin review.");
+      toast.success("Donation submitted for admin review.");
     } catch (error) {
       console.error(error);
-      alert(" Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -52,7 +86,7 @@ const CreateDonation = () => {
     <div className="max-w-3xl mx-auto px-6 py-10">
       <div className="bg-white rounded-xl shadow-lg p-8">
         <h2 className="flex items-center justify-center text-3xl font-bold text-green-600 mb-8 gap-2">
-           <GiFoodTruck className="text-green-500" />
+          <GiFoodTruck className="text-green-500" />
           Create a Food Donation
           <FaUtensils className="text-green-500" />
         </h2>
@@ -153,10 +187,11 @@ const CreateDonation = () => {
 
           <button
             type="submit"
-            className="mt-4 w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-md transition"
+            disabled={loadingRole}
+            className="mt-4 w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-md transition disabled:opacity-50"
           >
             <FaPlusCircle className="text-white text-lg" />
-            Submit Donation
+            {loadingRole ? "Loading role..." : "Submit Donation"}
           </button>
         </form>
       </div>
