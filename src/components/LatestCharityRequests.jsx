@@ -2,10 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import RequestCharityRole from "../Dashboard/RequestCharityRole";
+import DonationModal from "./Modals/DonationModal";
+
 
 const LatestCharityRequests = () => {
   const [charities, setCharities] = useState([]);
   const [showRequestForm, setShowRequestForm] = useState(false);
+  const [showDonationModal, setShowDonationModal] = useState(false);
+  const [selectedCharity, setSelectedCharity] = useState(null);
 
   useEffect(() => {
     const auth = getAuth();
@@ -19,9 +23,7 @@ const LatestCharityRequests = () => {
         const token = await user.getIdToken();
 
         const res = await axios.get("http://localhost:5000/api/charity-requests/approved", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         const charitiesData = Array.isArray(res.data) ? res.data : res.data.data || [];
@@ -33,6 +35,16 @@ const LatestCharityRequests = () => {
 
     return () => unsubscribe();
   }, []);
+
+  const openDonationModal = (charity) => {
+    setSelectedCharity(charity);
+    setShowDonationModal(true);
+  };
+
+  const closeDonationModal = () => {
+    setShowDonationModal(false);
+    setSelectedCharity(null);
+  };
 
   const handleBackdropClick = (e) => {
     if (e.target.id === "modal-backdrop") {
@@ -63,6 +75,12 @@ const LatestCharityRequests = () => {
               />
               <h3 className="text-2xl font-semibold text-gray-900">{req.name}</h3>
               <p className="text-green-600 font-semibold mt-1">{req.organization}</p>
+              <button
+                onClick={() => openDonationModal(req)}
+                className="mt-4 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+              >
+                Donate
+              </button>
             </div>
           ))
         ) : (
@@ -72,7 +90,7 @@ const LatestCharityRequests = () => {
         )}
       </div>
 
-      {/* BUTTON SECTION */}
+      {/* Request Role Button */}
       <div className="flex justify-center mt-10">
         <div className="bg-green-100 border-2 border-green-500 rounded-lg px-10 py-6 shadow-md w-full max-w-md flex justify-center">
           <button
@@ -84,7 +102,7 @@ const LatestCharityRequests = () => {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Role Request Modal */}
       {showRequestForm && (
         <div
           id="modal-backdrop"
@@ -103,6 +121,11 @@ const LatestCharityRequests = () => {
             <RequestCharityRole />
           </div>
         </div>
+      )}
+
+      {/* Donation Modal */}
+      {showDonationModal && selectedCharity && (
+        <DonationModal charity={selectedCharity} onClose={closeDonationModal} />
       )}
     </section>
   );
