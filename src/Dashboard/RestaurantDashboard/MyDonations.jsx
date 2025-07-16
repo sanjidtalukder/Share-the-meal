@@ -29,9 +29,9 @@ const MyDonations = () => {
       {donations.length === 0 ? (
         <p>No donation groups found.</p>
       ) : (
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-3 gap-4">
           {donations.map((d) => (
-            <div key={d._id} className="border p-4 rounded shadow bg-white">
+            <div key={d._id} className=" border-2 border-green-600 p-4 rounded shadow bg-white">
               <img src={d.image} alt={d.title} className="h-32 w-full object-cover rounded" />
               <h3 className="font-bold mt-2">{d.title}</h3>
               <p>{d.description}</p>

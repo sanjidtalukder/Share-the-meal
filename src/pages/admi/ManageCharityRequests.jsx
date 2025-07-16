@@ -8,7 +8,7 @@ const ManageCharityRequests = () => {
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
 
-  const { token } = useContext(AuthContext); // ✅ token from context
+  const { token } = useContext(AuthContext); //  token from context
 
   useEffect(() => {
     const fetchApprovedRequests = async () => {
