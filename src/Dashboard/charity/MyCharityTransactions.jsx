@@ -9,7 +9,7 @@ const MyCharityTransactions = ({ user }) => {
      axios.get(`/api/transactions/charity?email=${user.email}`)
         .then(res => setTransactions(res.data));
     }
-  }, [user]); // dependency হিসেবে user দিতে হবে
+  }, [user]); // dependency user 
 
   if (!user?.email) {
     return <p className="p-4">Loading user data...</p>;
