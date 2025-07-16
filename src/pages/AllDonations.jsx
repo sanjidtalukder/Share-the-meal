@@ -8,9 +8,7 @@ const AllDonations = () => {
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
 
-
-
-useEffect(() => {
+  useEffect(() => {
   const fetchDonations = async () => {
     try {
       const auth = getAuth();
@@ -26,11 +24,13 @@ useEffect(() => {
 
       const res = await axios.get("http://localhost:5000/api/donations?status=Verified", {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
-      setDonations(res.data);
+      console.log("✅ Verified Donations:", res.data);
+
+      setDonations(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Error fetching donations", err);
       toast.error("Unauthorized or error occurred.");
