@@ -12,7 +12,7 @@ const ManageUsers = () => {
         setUsers(res.data);
         setLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         toast.error("Failed to load users");
         setLoading(false);
       });
@@ -25,7 +25,7 @@ const ManageUsers = () => {
       setUsers(prev =>
         prev.map(user => user._id === id ? { ...user, role } : user)
       );
-    } catch (err) {
+    } catch {
       toast.error("Role update failed");
     }
   };
@@ -36,71 +36,73 @@ const ManageUsers = () => {
       await axios.delete(`http://localhost:5000/api/users/${id}`);
       toast.success("User deleted");
       setUsers(prev => prev.filter(user => user._id !== id));
-    } catch (err) {
+    } catch {
       toast.error("Failed to delete user");
     }
   };
 
-  if (loading) return <div className="p-4 text-center">Loading users...</div>;
+  if (loading) return <div className="p-4 text-center text-gray-600">Loading users...</div>;
 
   return (
-    <div className="p-6 bg-white rounded shadow max-w-5xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Manage Users</h2>
+    <div className="p-6 bg-white rounded shadow max-w-7xl mx-auto">
+      <h2 className="text-3xl font-bold mb-6 text-center">Manage Users</h2>
+
       {users.length === 0 ? (
-        <p>No users found.</p>
+        <p className="text-center text-gray-500">No users found.</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="table w-full border">
-            <thead className="bg-gray-100 text-left">
+          <table className="min-w-full border border-gray-200">
+            <thead className="bg-gray-50">
               <tr>
-                <th className="p-2">Name</th>
-                <th className="p-2">Email</th>
-                <th className="p-2">Role</th>
-                <th className="p-2">Actions</th>
+                <th className="px-4 py-3 text-left text-gray-700 font-semibold">Name</th>
+                <th className="px-4 py-3 text-left text-gray-700 font-semibold">Email</th>
+                <th className="px-4 py-3 text-left text-gray-700 font-semibold">Role</th>
+                <th className="px-4 py-3 text-left text-gray-700 font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {users.map(user => {
-                const { _id, name, email, role } = user;
-
-                const roleBadge = {
-                  admin: "bg-blue-100 text-blue-700",
+              {users.map(({ _id, name, email, role }) => {
+                const roleBadgeClass = {
+                  admin: "bg-blue-100 text-blue-800",
                   restaurant: "bg-yellow-100 text-yellow-800",
-                  charity: "bg-purple-100 text-purple-700",
-                  user: "bg-gray-100 text-gray-700"
-                }[role] || "bg-gray-100 text-gray-700";
+                  charity: "bg-purple-100 text-purple-800",
+                  user: "bg-gray-100 text-gray-600",
+                }[role] || "bg-gray-100 text-gray-600";
 
                 return (
-                  <tr key={_id} className="border-t text-sm">
-                    <td className="p-2">{name}</td>
-                    <td className="p-2">{email}</td>
-                    <td className="p-2">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${roleBadge}`}>
-                        {role}
+                  <tr key={_id} className="border-t border-gray-200 hover:bg-gray-50 text-sm">
+                    <td className="px-4 py-3">{name}</td>
+                    <td className="px-4 py-3">{email}</td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-block px-3 py-1 rounded-full font-medium text-xs ${roleBadgeClass}`}>
+                        {role.charAt(0).toUpperCase() + role.slice(1)}
                       </span>
                     </td>
-                    <td className="p-2 space-x-1">
+                    <td className="px-4 py-3 space-x-2">
                       {["admin", "restaurant", "charity"].map(targetRole => (
                         <button
                           key={targetRole}
                           onClick={() => updateRole(_id, targetRole)}
                           disabled={role === targetRole}
-                          className={`px-2 py-1 rounded text-white ${
-                            role === targetRole
+                          className={`px-3 py-1 rounded text-white text-xs font-semibold
+                            ${role === targetRole
                               ? "bg-gray-400 cursor-not-allowed"
                               : targetRole === "admin"
-                              ? "bg-blue-500 hover:bg-blue-600"
+                              ? "bg-blue-600 hover:bg-blue-700"
                               : targetRole === "restaurant"
-                              ? "bg-yellow-500 hover:bg-yellow-600"
-                              : "bg-purple-600 hover:bg-purple-700"
-                          }`}
+                              ? "bg-yellow-600 hover:bg-yellow-700"
+                              : "bg-purple-700 hover:bg-purple-800"}
+                          `}
+                          title={`Make ${targetRole.charAt(0).toUpperCase() + targetRole.slice(1)}`}
                         >
-                          Make {targetRole.charAt(0).toUpperCase() + targetRole.slice(1)}
+                          {targetRole.charAt(0).toUpperCase() + targetRole.slice(1)}
                         </button>
                       ))}
+
                       <button
                         onClick={() => deleteUser(_id)}
-                        className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded"
+                        className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white text-xs font-semibold"
+                        title="Delete User"
                       >
                         Delete
                       </button>

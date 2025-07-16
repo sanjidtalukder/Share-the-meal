@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../providers/AuthProvider";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -7,22 +8,41 @@ const ManageCharityRequests = () => {
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
 
+  const { token } = useContext(AuthContext); // ✅ token from context
+
   useEffect(() => {
-    axios.get("http://localhost:5000/api/charity-requests/approved")
-      .then(res => setRequests(res.data))
-      .catch(() => {
+    const fetchApprovedRequests = async () => {
+      if (!token) {
+        toast.error("User not authenticated");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await axios.get("http://localhost:5000/api/charity-requests/approved", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setRequests(res.data);
+      } catch (error) {
+        console.error("❌ Failed to fetch charity requests:", error.response?.data || error.message);
         toast.error("Failed to load charity requests");
         setRequests([]);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApprovedRequests();
+  }, [token]);
 
   const deleteRequest = async (id) => {
     try {
       setDeletingId(id);
       await axios.delete(`http://localhost:5000/api/requests/${id}`);
       toast.success("Request deleted");
-      setRequests(prev => prev.filter(r => r._id !== id));
+      setRequests((prev) => prev.filter((r) => r._id !== id));
     } catch (error) {
       toast.error("Failed to delete request");
     } finally {
@@ -64,7 +84,10 @@ const ManageCharityRequests = () => {
                     <td className="p-3 text-center">{index + 1}</td>
                     <td className="p-3">
                       <img
-                        src={req.userImage || "https://i.ibb.co/FkbR8b5D/x0165u0t4ad10d31d576186ml3rwr24r.webp"}
+                        src={
+                          req.userImage ||
+                          "https://i.ibb.co/FkbR8b5D/x0165u0t4ad10d31d576186ml3rwr24r.webp"
+                        }
                         alt={req.name}
                         className="w-10 h-10 rounded-full mx-auto border object-cover"
                       />
