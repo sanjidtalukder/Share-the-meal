@@ -22,7 +22,7 @@ const ManageRoleRequests = () => {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md max-w-full overflow-x-auto">
+    <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl overflow-x-auto">
       <h2 className="text-3xl font-semibold mb-6 text-gray-800">Manage Role Requests</h2>
       
       <table className="min-w-full border-collapse border border-gray-200">

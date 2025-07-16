@@ -1,72 +1,92 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState, useContext } from "react";
+import axios from "axios";
+import { AuthContext } from "../../providers/AuthProvider";
 
-const MyRequests = ({ user }) => {
+
+const MyRequests = () => {
+  const { user, loading } = useContext(AuthContext);
   const [requests, setRequests] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const fetchRequests = () => {
-    if (user?.email) {
-      setLoading(true);
-      axios.get(`/api/requests?charityEmail=${user.email}`)
-        .then(res => {
-          const data = Array.isArray(res.data) ? res.data : res.data.data || [];
-          setRequests(data);
-        })
-        .catch(err => {
-          console.error("Error fetching requests:", err);
-          setRequests([]);
-        })
-        .finally(() => setLoading(false));
+  const fetchRequests = async () => {
+    if (!user?.email) return;
+    setError(null);
+
+    try {
+      const res = await axios.get(`http://localhost:5000/api/requests?charityEmail=${user.email}`);
+      setRequests(res.data);
+    } catch (err) {
+      setError("Failed to load requests");
     }
   };
 
   useEffect(() => {
-    fetchRequests();
+    if (user?.email) fetchRequests();
   }, [user]);
 
   const handleCancel = async (id) => {
+    if (!window.confirm("Are you sure you want to cancel this pending request?")) return;
+
     try {
-      await axios.delete(`/api/requests/${id}`);
-      setRequests(prev => prev.filter(r => r._id !== id));
+      await axios.delete(`http://localhost:5000/api/requests/${id}`);
+      fetchRequests();
     } catch (err) {
-      console.error("Failed to cancel request:", err);
+      alert(err.response?.data?.error || "Failed to cancel request");
     }
   };
 
-  // Example form submit function
-  // const handleSubmit = async (formData) => {
-  //   try {
-  //     await axios.post('/api/requests', formData);
-  //     alert('Request created');
-  //     fetchRequests(); // Re-fetch after new request is created
-  //   } catch (err) {
-  //     alert('Failed to create request');
-  //   }
-  // };
-
-  if (loading) return <p className="p-4">Loading your requests...</p>;
-  if (!requests.length) return <p className="p-4">You haven't made any requests yet.</p>;
+  if (loading) return <p>Loading user info...</p>;
+  if (!user) return <p className="text-center text-red-600">Please log in to see your requests.</p>;
+  if (error) return <p className="text-center text-red-600">{error}</p>;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-      {requests.map(r => (
-        <div key={r._id} className="p-4 shadow bg-white rounded">
-          <h3 className="font-bold text-lg">{r.title}</h3>
-          <p>Restaurant: {r.restaurantName}</p>
-          <p>Type: {r.type}</p>
-          <p>Quantity: {r.quantity}</p>
-          <p>Status: <span className="font-semibold">{r.status}</span></p>
-          {r.status === "Pending" && (
-            <button
-              onClick={() => handleCancel(r._id)}
-              className="mt-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+ 
+    <div className="max-w-5xl mx-auto p-6">
+      <h2 className="text-3xl font-semibold mb-6">My Donation Requests</h2>
+      {requests.length === 0 ? (
+        <p className="text-gray-600 italic text-center">No donation requests found.</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {requests.map((req) => (
+            <div
+              key={req._id}
+              className="border rounded-lg shadow p-4 relative hover:shadow-lg transition"
             >
-              Cancel
-            </button>
-          )}
+              <h3 className="font-bold text-xl mb-2 truncate">{req.title || req.donationTitle}</h3>
+              <p>
+                <strong>Restaurant:</strong> {req.restaurantName || (req.restaurant?.name ?? "Unknown")}
+              </p>
+              <p>
+                <strong>Food Type:</strong> {req.type || req.foodType}
+              </p>
+              <p>
+                <strong>Quantity:</strong> {req.quantity ?? "N/A"}
+              </p>
+              <p className="mt-2">
+                <span
+                  className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                    req.status === "Pending"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : req.status === "Accepted"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
+                  {req.status}
+                </span>
+              </p>
+              {req.status === "Pending" && (
+                <button
+                  onClick={() => handleCancel(req._id)}
+                  className="absolute top-4 right-4 text-red-600 hover:text-red-800 font-semibold"
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 };

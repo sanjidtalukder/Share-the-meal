@@ -22,10 +22,10 @@ const CharityProfile = () => {
 
       try {
         const token = await currentUser.getIdToken();
-        console.log("🟢 Current user:", currentUser.email);
-        console.log("🟢 Token:", token);
+        console.log(" Current user:", currentUser.email);
+        console.log(" Token:", token);
 
-        setPhotoURL(currentUser.photoURL); // ✅ save fallback Gmail image
+        setPhotoURL(currentUser.photoURL); //  save fallback Gmail image
 
         const res = await axios.get("http://localhost:5000/api/charity-requests/profile", {
           headers: {
@@ -33,17 +33,17 @@ const CharityProfile = () => {
           }
         });
 
-        console.log("🟢 Response from backend:", res.data);
+        console.log(" Response from backend:", res.data);
 
         if (!res.data || res.data.role !== "charity") {
-          console.log("🔴 Not a charity user");
+          console.log(" Not a charity user");
           setUnauthorized(true);
         } else {
           setUser(res.data);
         }
 
       } catch (err) {
-        console.error("❌ Error fetching user:", err.response?.data || err.message);
+        console.error(" Error fetching user:", err.response?.data || err.message);
         setUnauthorized(true);
       } finally {
         setLoading(false);

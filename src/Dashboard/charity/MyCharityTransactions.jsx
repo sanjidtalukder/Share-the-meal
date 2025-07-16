@@ -6,7 +6,7 @@ const MyCharityTransactions = ({ user }) => {
 
   useEffect(() => {
     if (user?.email) {
-      axios.get(`/api/transactions/charity?email=${user.email}`)
+     axios.get(`/api/transactions/charity?email=${user.email}`)
         .then(res => setTransactions(res.data));
     }
   }, [user]); // dependency হিসেবে user দিতে হবে
@@ -17,6 +17,7 @@ const MyCharityTransactions = ({ user }) => {
 
   return (
     <div className="overflow-x-auto">
+      
       <table className="min-w-full bg-white">
         <thead>
           <tr>
