@@ -20,11 +20,11 @@ const DonationModal = ({ charity, onClose }) => {
     setLoading(true);
 
     try {
-      // Backend এ payment intent তৈরি করো
+      
       const { data } = await axios.post(
         "http://localhost:5000/api/donations/create-payment-intent",
         {
-          amount: amount * 100, // সেন্টে (ডলার * 100)
+          amount: amount * 100, 
           charityId: charity._id,
           userEmail: user?.email,
         }
@@ -50,7 +50,7 @@ const DonationModal = ({ charity, onClose }) => {
       }
 
       if (paymentResult.paymentIntent.status === "succeeded") {
-        // পেমেন্ট সফল, এখন ডাটাবেজে ডোনেশন সেভ করো
+        
         await axios.post("http://localhost:5000/api/donations/save", {
           userEmail: user?.email,
           charityId: charity._id,
