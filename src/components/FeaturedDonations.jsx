@@ -8,7 +8,7 @@ const FeaturedDonations = () => {
   useEffect(() => {
     const fetchDonations = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/donations"); // Backend থেকে 4টা verified donation ফেচ করবে
+        const res = await axios.get("https://share-the-meal-server-blond.vercel.app/donations"); // Backend থেকে 4টা verified donation ফেচ করবে
         setDonations(res.data);
       } catch (error) {
         console.error("Error fetching donations:", error);

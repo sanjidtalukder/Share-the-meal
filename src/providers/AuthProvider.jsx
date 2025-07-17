@@ -55,12 +55,12 @@ const AuthProvider = ({ children }) => {
       setToken(idToken);
 
       try {
-        const response = await axios.get(`http://localhost:5000/api/users?email=${currentUser.email}`);
+        const response = await axios.get(`https://share-the-meal-server-blond.vercel.app/api/users?email=${currentUser.email}`);
         if (response.status === 200) {
           console.log("✅ User exists in MongoDB");
         } else {
           // Normally 404 হবে, তাই POST করবো
-          await axios.post("http://localhost:5000/api/users", {
+          await axios.post("https://share-the-meal-server-blond.vercel.app/api/users", {
             name: currentUser.displayName || "Unknown",
             email: currentUser.email,
             photo: currentUser.photoURL || null,
@@ -71,7 +71,7 @@ const AuthProvider = ({ children }) => {
         if (err.response?.status === 404) {
           // ইউজার না পাওয়া গেলে POST করো
           try {
-            await axios.post("http://localhost:5000/api/users", {
+            await axios.post("https://share-the-meal-server-blond.vercel.app/api/users", {
               name: currentUser.displayName || "Unknown",
               email: currentUser.email,
               photo: currentUser.photoURL || null,

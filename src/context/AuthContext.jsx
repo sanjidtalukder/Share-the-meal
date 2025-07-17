@@ -27,7 +27,7 @@ const AuthProvider = ({ children }) => {
         };
 
         try {
-          await axios.post("http://localhost:5000/api/users", userInfo);
+          await axios.post("https://share-the-meal-server-blond.vercel.app/api/users", userInfo);
         } catch (err) {
           console.error("Failed to save user:", err.message);
         }

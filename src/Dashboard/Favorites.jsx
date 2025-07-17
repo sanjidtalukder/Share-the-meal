@@ -9,7 +9,7 @@ const Favorites = () => {
   useEffect(() => {
     if (user?.email) {
       axios
-        .get(`http://localhost:5000/api/favorites?email=${user.email}`)
+        .get(`https://share-the-meal-server-blond.vercel.app/api/favorites?email=${user.email}`)
         .then((res) => setFavorites(res.data))
         .catch((err) => {
           console.error("Failed to load favorites:", err);

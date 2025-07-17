@@ -8,7 +8,7 @@ const MyDonations = () => {
 
   useEffect(() => {
     if (user?.email && token) {
-      axios.get(`http://localhost:5000/api/donations?email=${user.email}`, {
+      axios.get(`https://share-the-meal-server-blond.vercel.app/api/donations?email=${user.email}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

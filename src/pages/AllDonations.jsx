@@ -22,7 +22,7 @@ const AllDonations = () => {
 
       const token = await user.getIdToken();
 
-      const res = await axios.get("http://localhost:5000/api/donations?status=Verified", {
+      const res = await axios.get("https://share-the-meal-server-blond.vercel.app/api/donations?status=Verified", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -22,7 +22,7 @@ const DonationModal = ({ charity, onClose }) => {
     try {
       
       const { data } = await axios.post(
-        "http://localhost:5000/api/donations/create-payment-intent",
+        "https://share-the-meal-server-blond.vercel.app/api/donations/create-payment-intent",
         {
           amount: amount * 100, 
           charityId: charity._id,
@@ -51,7 +51,7 @@ const DonationModal = ({ charity, onClose }) => {
 
       if (paymentResult.paymentIntent.status === "succeeded") {
         
-        await axios.post("http://localhost:5000/api/donations/save", {
+        await axios.post("https://share-the-meal-server-blond.vercel.app/api/donations/save", {
           userEmail: user?.email,
           charityId: charity._id,
           amount,

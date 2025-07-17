@@ -10,7 +10,7 @@ const TransactionHistory = () => {
     if (!user?.email) return;
 
     axios
-      .get(`http://localhost:5000/api/transactions/charity?email=${user.email}`)
+      .get(`https://share-the-meal-server-blond.vercel.app/api/transactions/charity?email=${user.email}`)
       .then((res) => {
         if (Array.isArray(res.data)) {
           setTransactions(res.data);

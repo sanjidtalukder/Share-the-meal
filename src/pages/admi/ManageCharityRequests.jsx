@@ -19,7 +19,7 @@ const ManageCharityRequests = () => {
       }
 
       try {
-        const res = await axios.get("http://localhost:5000/api/charity-requests/approved", {
+        const res = await axios.get("https://share-the-meal-server-blond.vercel.app/api/charity-requests/approved", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -40,7 +40,7 @@ const ManageCharityRequests = () => {
   const deleteRequest = async (id) => {
     try {
       setDeletingId(id);
-      await axios.delete(`http://localhost:5000/api/requests/${id}`);
+      await axios.delete(`https://share-the-meal-server-blond.vercel.app/api/requests/${id}`);
       toast.success("Request deleted");
       setRequests((prev) => prev.filter((r) => r._id !== id));
     } catch (error) {

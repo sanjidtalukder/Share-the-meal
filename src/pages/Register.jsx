@@ -32,7 +32,7 @@ const Register = () => {
       });
 
       // ✅ Save user to MongoDB
-      await axios.post("http://localhost:5000/api/users", {
+      await axios.post("https://share-the-meal-server-blond.vercel.app/api/users", {
         name,
         email,
         photo,

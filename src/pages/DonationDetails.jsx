@@ -11,7 +11,7 @@ const DonationDetails = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/donations/${id}`)
+      .get(`https://share-the-meal-server-blond.vercel.app/api/donations/${id}`)
       .then((res) => {
         setDonation(res.data);
         setLoading(false);
@@ -40,7 +40,7 @@ const DonationDetails = () => {
   if (!user) return alert("Please login first.");
 
   try {
-    await axios.post("http://localhost:5000/api/favorites", {
+    await axios.post("https://share-the-meal-server-blond.vercel.app/api/favorites", {
       userEmail: user.email,
       donationId: id,
       title: donation.title,

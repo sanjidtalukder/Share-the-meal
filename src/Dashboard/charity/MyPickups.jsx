@@ -14,7 +14,7 @@ const MyPickups = () => {
     if (!user?.email) return;
     setError(null);
     try {
-      const res = await axios.get(`http://localhost:5000/api/requests/assigned?charityEmail=${user.email}`);
+      const res = await axios.get(`https://share-the-meal-server-blond.vercel.app/api/requests/assigned?charityEmail=${user.email}`);
       setPickups(res.data);
     } catch (err) {
       setError("Failed to load pickups");
@@ -30,7 +30,7 @@ const MyPickups = () => {
 
     try {
       setConfirmingId(id);
-      await axios.put(`http://localhost:5000/api/requests/${id}/confirm-pickup`);
+      await axios.put(`https://share-the-meal-server-blond.vercel.app/api/requests/${id}/confirm-pickup`);
       await fetchPickups();
     } catch (err) {
       alert(err.response?.data?.error || "Failed to confirm pickup");
