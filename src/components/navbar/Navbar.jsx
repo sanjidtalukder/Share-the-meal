@@ -61,6 +61,35 @@ const Navbar = () => {
             </NavLink>
           </li>
 
+           <li>
+            <NavLink
+              to="/aboutUs"
+              className={({ isActive }) =>
+                isActive
+                  ? "font-semibold underline text-yellow-300"
+                  : "hover:text-yellow-100 transition-colors"
+              }
+              onClick={() => setDropdownOpen(false)}
+            >
+             About Us
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/faq"
+              className={({ isActive }) =>
+                isActive
+                  ? "font-semibold underline text-yellow-300"
+                  : "hover:text-yellow-100 transition-colors"
+              }
+              onClick={() => setDropdownOpen(false)}
+            >
+             FAQ
+            </NavLink>
+          </li>
+          
+
           <li>
             <NavLink
               to="/dashboard"

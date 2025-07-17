@@ -14,7 +14,7 @@ const stories = [
     id: 2,
     name: "Hope Charity",
     story: "With donations, we now feed 100 people every weekend.",
-    image: "https://i.ibb.co/xSnDzTHw/Bid4-min.png",
+    image: "https://i.ibb.co/5hDhrdJr/charity.jpg",
   },
 ];
 

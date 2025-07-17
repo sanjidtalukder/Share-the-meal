@@ -33,6 +33,10 @@ import ManageCharityRequests from "../pages/admi/ManageCharityRequests";
 import ManageDonations from "../pages/admi/ManageDonations";
 import ManageRoleRequests from "../pages/admi/ManageRoleRequests";
 import ManageUsers from "../pages/admi/ManageUsers";
+import FAQ from "../components/FAQ";
+import AboutUs from "../components/AboutUs";
+import LatestCharityRequests from "../components/LatestCharityRequests";
+import Contact from "../components/Contact";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +49,10 @@ const router = createBrowserRouter([
       { path: "donations", element: <AllDonations /> },
       { path: "/donations/:id", element: <DonationDetails /> },
       { path: "creat-donation", element: <CreatDonation /> },
+      { path: "faq", element: <FAQ /> },
+      { path: "aboutUs", element: <AboutUs /> },
+      { path: "contact", element: <Contact/> },
+      { path: "latestCharityRequest", element: <LatestCharityRequests /> },
     ],
   },
   {

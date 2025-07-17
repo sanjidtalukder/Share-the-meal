@@ -6,10 +6,10 @@ const Footer = () => {
     <footer className="footer footer-center bg-green-700 text-white p-10 rounded-t-4xl">
       
       <div className="grid grid-flow-col gap-6 text-lg font-medium">
-        <NavLink to="/about" className="link link-hover hover:text-yellow-300">About us</NavLink>
+        <NavLink to="/aboutUs" className="link link-hover hover:text-yellow-300">About us</NavLink>
+        <NavLink to="/donations" className="link link-hover hover:text-yellow-300">All Donation</NavLink>
+        <NavLink to="/latestCharityRequest" className="link link-hover hover:text-yellow-300">Charity</NavLink>
         <NavLink to="/contact" className="link link-hover hover:text-yellow-300">Contact</NavLink>
-        <NavLink to="/jobs" className="link link-hover hover:text-yellow-300">Jobs</NavLink>
-        <NavLink to="/press" className="link link-hover hover:text-yellow-300">Press kit</NavLink>
       </div>
 
       <div className="grid grid-flow-col gap-6 mt-4">
