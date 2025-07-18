@@ -3,10 +3,12 @@ import axios from "axios";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import RequestCharityRole from "../Dashboard/RequestCharityRole";
 import DonationModal from "./Modals/DonationModal";
-
+import Lottie from "lottie-react";
+import loadingAnimation from "../../src/assets/Loading Files.json";
 
 const LatestCharityRequests = () => {
   const [charities, setCharities] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [showDonationModal, setShowDonationModal] = useState(false);
   const [selectedCharity, setSelectedCharity] = useState(null);
@@ -16,20 +18,27 @@ const LatestCharityRequests = () => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         console.log("❌ User not logged in");
+        setLoading(false);
         return;
       }
 
       try {
         const token = await user.getIdToken();
+        const res = await axios.get(
+          "https://share-the-meal-server-blond.vercel.app/api/charity-requests/approved",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-        const res = await axios.get("https://share-the-meal-server-blond.vercel.app/api/charity-requests/approved", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        const charitiesData = Array.isArray(res.data) ? res.data : res.data.data || [];
+        const charitiesData = Array.isArray(res.data)
+          ? res.data
+          : res.data.data || [];
         setCharities(charitiesData);
       } catch (err) {
         console.error("❌ Error fetching approved charity requests:", err);
+      } finally {
+        setLoading(false);
       }
     });
 
@@ -58,37 +67,47 @@ const LatestCharityRequests = () => {
         Latest Charity Requests
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {Array.isArray(charities) && charities.length > 0 ? (
-          charities.map((req) => (
-            <div
-              key={req._id}
-              className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col items-center text-center"
-            >
-              <img
-                src={
-                  req.userImage ||
-                  "https://i.ibb.co/FkbR8b5D/x0165u0t4ad10d31d576186ml3rwr24r.webp"
-                }
-                alt={req.name}
-                className="h-24 w-24 object-cover rounded-full border-4 border-green-300 mb-4"
-              />
-              <h3 className="text-2xl font-semibold text-gray-900">{req.name}</h3>
-              <p className="text-green-600 font-semibold mt-1">{req.organization}</p>
-              <button
-                onClick={() => openDonationModal(req)}
-                className="mt-4 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+      {loading ? (
+        <div className="flex justify-center items-center h-[300px]">
+          <Lottie animationData={loadingAnimation} loop={true} />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {Array.isArray(charities) && charities.length > 0 ? (
+            charities.map((req) => (
+              <div
+                key={req._id}
+                className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col items-center text-center"
               >
-                Donate
-              </button>
-            </div>
-          ))
-        ) : (
-          <p className="col-span-full text-center text-gray-400 text-lg mt-12">
-            No charity requests found.
-          </p>
-        )}
-      </div>
+                <img
+                  src={
+                    req.userImage ||
+                    "https://i.ibb.co/FkbR8b5D/x0165u0t4ad10d31d576186ml3rwr24r.webp"
+                  }
+                  alt={req.name}
+                  className="h-24 w-24 object-cover rounded-full border-4 border-green-300 mb-4"
+                />
+                <h3 className="text-2xl font-semibold text-gray-900">
+                  {req.name}
+                </h3>
+                <p className="text-green-600 font-semibold mt-1">
+                  {req.organization}
+                </p>
+                <button
+                  onClick={() => openDonationModal(req)}
+                  className="mt-4 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                >
+                  Donate
+                </button>
+              </div>
+            ))
+          ) : (
+            <p className="col-span-full text-center text-gray-400 text-lg mt-12">
+              No charity requests found.
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Request Role Button */}
       <div className="flex justify-center mt-10">
@@ -117,7 +136,9 @@ const LatestCharityRequests = () => {
             >
               &times;
             </button>
-            <h3 className="text-2xl font-semibold mb-4 text-center">Request Charity Role</h3>
+            <h3 className="text-2xl font-semibold mb-4 text-center">
+              Request Charity Role
+            </h3>
             <RequestCharityRole />
           </div>
         </div>
