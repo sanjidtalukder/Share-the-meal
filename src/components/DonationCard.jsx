@@ -3,6 +3,14 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../providers/AuthProvider";
 
 const DonationCard = ({ donation }) => {
+  if (!donation) {
+    return (
+      <div className="p-4 border border-red-400 rounded text-red-600 text-sm">
+        ⚠️ Donation data is missing or undefined.
+      </div>
+    );
+  }
+
   const {
     _id,
     image,
@@ -21,7 +29,9 @@ const DonationCard = ({ donation }) => {
     if (userRole === "charity") {
       handlePickup(_id);
     } else {
-      alert("Only charity users can pick up. Please request a charity organization.");
+      alert(
+        "Only charity users can pick up. Please request a charity organization."
+      );
     }
   };
 
@@ -37,7 +47,7 @@ const DonationCard = ({ donation }) => {
 
       if (response.ok) {
         alert("Pickup confirmed!");
-        // Optionally refresh UI
+        // Optional: refresh donation status or trigger re-fetch
       } else {
         console.error("Pickup failed.");
       }
@@ -48,13 +58,25 @@ const DonationCard = ({ donation }) => {
 
   return (
     <div className="rounded-xl border-2 border-green-400 overflow-hidden bg-white shadow-xl hover:shadow-2xl transition-shadow duration-300">
-      <img src={image} alt={title} className="w-full h-48 object-cover" />
+      <img
+        src={image || "https://via.placeholder.com/400x200?text=No+Image"}
+        alt={title || "Untitled"}
+        className="w-full h-48 object-cover"
+      />
       <div className="p-4 space-y-2">
-        <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
-        <p><span className="font-semibold">Restaurant:</span> {restaurantName}</p>
-        <p><span className="font-semibold">Location:</span> {location}</p>
+        <h2 className="text-xl font-semibold text-gray-800">
+          {title || "Untitled Donation"}
+        </h2>
+        <p>
+          <span className="font-semibold">Restaurant:</span> {restaurantName}
+        </p>
+        <p>
+          <span className="font-semibold">Location:</span> {location}
+        </p>
         {charityName && (
-          <p><span className="font-semibold">Charity:</span> {charityName}</p>
+          <p>
+            <span className="font-semibold">Charity:</span> {charityName}
+          </p>
         )}
         <p>
           <span className="font-semibold">Status:</span>{" "}
@@ -73,7 +95,6 @@ const DonationCard = ({ donation }) => {
           </span>
         </p>
 
-        {/* Buttons */}
         <div className="flex gap-4 mt-4">
           <Link
             to={`/donations/${_id}`}

@@ -6,7 +6,7 @@ const MyCharityTransactions = ({ user }) => {
 
   useEffect(() => {
     if (user?.email) {
-     axios.get(`/api/transactions/charity?email=${user.email}`)
+     axios.get(`http://localhost:5000/api/transactions/charity?email=${user.email}`)
         .then(res => setTransactions(res.data));
     }
   }, [user]); // dependency user 

@@ -8,11 +8,13 @@ const ReceivedDonations = () => {
   const [donations, setDonations] = useState([]);
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
+  console.log(user)
 
   useEffect(() => {
+    
     if (user?.email) {
       // Fetch received donations
-      axios.get(`/api/requests/received?charityEmail=${user.email}`)
+      axios.get(`https://share-the-meal-server-blond.vercel.app/api/requests/received?charityId=${user._id}`)
         .then(res => {
           setDonations(Array.isArray(res.data) ? res.data : []);
         })
@@ -22,7 +24,7 @@ const ReceivedDonations = () => {
         });
 
       // Fetch payment records
-      axios.get(`/api/donation-payments?email=${user.email}`)
+      axios.get(`https://share-the-meal-server-blond.vercel.app/api/donation-payments?email=${user.email}`)
         .then(res => {
           setPayments(Array.isArray(res.data) ? res.data : []);
         })

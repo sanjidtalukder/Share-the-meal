@@ -1,17 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import RequestCharityRole from "../Dashboard/RequestCharityRole";
 import DonationModal from "./Modals/DonationModal";
 import Lottie from "lottie-react";
+import toast from "react-hot-toast";
 import loadingAnimation from "../../src/assets/Loading Files.json";
+import { AuthContext } from "../providers/AuthProvider";
+
+
 
 const LatestCharityRequests = () => {
+  const { user } = useContext(AuthContext);
   const [charities, setCharities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [showDonationModal, setShowDonationModal] = useState(false);
   const [selectedCharity, setSelectedCharity] = useState(null);
+  const [showRequestPopup, setShowRequestPopup] = useState(false);
+  const [requestTargetCharity, setRequestTargetCharity] = useState(null);
 
   useEffect(() => {
     const auth = getAuth();
@@ -55,6 +62,16 @@ const LatestCharityRequests = () => {
     setSelectedCharity(null);
   };
 
+  const openRequestPopup = (charity) => {
+    setRequestTargetCharity(charity);
+    setShowRequestPopup(true);
+  };
+
+  const closeRequestPopup = () => {
+    setRequestTargetCharity(null);
+    setShowRequestPopup(false);
+  };
+
   const handleBackdropClick = (e) => {
     if (e.target.id === "modal-backdrop") {
       setShowRequestForm(false);
@@ -93,12 +110,22 @@ const LatestCharityRequests = () => {
                 <p className="text-green-600 font-semibold mt-1">
                   {req.organization}
                 </p>
-                <button
-                  onClick={() => openDonationModal(req)}
-                  className="mt-4 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-                >
-                  Donate
-                </button>
+
+                <div className="flex gap-3 mt-4">
+                  <button
+                    onClick={() => openDonationModal(req)}
+                    className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                  >
+                    Donate
+                  </button>
+
+                  <button
+                    onClick={() => openRequestPopup(req)}
+                    className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                  >
+                    Request
+                  </button>
+                </div>
               </div>
             ))
           ) : (
@@ -146,7 +173,80 @@ const LatestCharityRequests = () => {
 
       {/* Donation Modal */}
       {showDonationModal && selectedCharity && (
-        <DonationModal charity={selectedCharity} onClose={closeDonationModal} />
+        <DonationModal
+          charity={selectedCharity}
+          onClose={closeDonationModal}
+        />
+      )}
+
+      {/* New Request Modal */}
+      {showRequestPopup && requestTargetCharity && (
+        <div
+          id="request-popup-backdrop"
+          onClick={(e) => {
+            if (e.target.id === "request-popup-backdrop") {
+              closeRequestPopup();
+            }
+          }}
+          className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4"
+        >
+          <div className="bg-white rounded-lg p-6 max-w-md w-full relative shadow-lg">
+            <button
+              onClick={closeRequestPopup}
+              className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-2xl"
+            >
+              &times;
+            </button>
+            <h3 className="text-2xl font-semibold mb-4 text-center">
+              Send Request to {requestTargetCharity.name}
+            </h3>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const form = e.target;
+                const message = form.message.value;
+
+                try {
+                  const res = await axios.post(
+                  "https://share-the-meal-server-blond.vercel.app/api/charity-requests/message"
+,
+                    {
+                      name: user.displayName,
+                      email: user.email,
+                      message,
+                    }
+                  );
+
+                  if (res.data?.success) {
+                    toast.success(" Request sent successfully!");
+                    closeRequestPopup();
+                    form.reset();
+                  } else {
+                    toast.error(" Failed to send request");
+                  }
+                } catch (err) {
+                  console.error(" Failed to send request", err);
+                  toast.error(" Server Error");
+                }
+              }}
+            >
+              <textarea
+                name="message"
+                rows="4"
+                placeholder="Write your message..."
+                className="w-full border border-gray-300 rounded p-3 focus:outline-green-500"
+                required
+              ></textarea>
+              <button
+                type="submit"
+                className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+              >
+                Send Request
+              </button>
+            </form>
+          </div>
+        </div>
       )}
     </section>
   );
