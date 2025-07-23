@@ -1,22 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../providers/AuthProvider";
 
 const FeaturedDonations = () => {
   const [donations, setDonations] = useState([]);
+  const { token } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchDonations = async () => {
       try {
-        const res = await axios.get("https://share-the-meal-server-blond.vercel.app/donations"); // Backend থেকে 4টা verified donation ফেচ করবে
+        const res = await axios.get("https://share-the-meal-server-blond.vercel.app/api/donations", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("✅ Donations fetched:", res.data);
         setDonations(res.data);
       } catch (error) {
-        console.error("Error fetching donations:", error);
+        console.error("❌ Error fetching donations:", error);
       }
     };
 
-    fetchDonations();
-  }, []);
+    if (token) {
+      console.log(" Token is:", token);
+      fetchDonations();
+    }
+  }, [token]);
 
   return (
     <div className="py-10 px-4 max-w-7xl mx-auto">

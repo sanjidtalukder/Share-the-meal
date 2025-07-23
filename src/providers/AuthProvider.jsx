@@ -8,106 +8,101 @@ import {
   updateProfile
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
-import { auth } from "../firebase/src/firebase/firebase.config";
+
 import axios from "axios";
+import { auth } from "../firebase/firebase.config";
 
 export const AuthContext = createContext(null);
 
 const googleProvider = new GoogleAuthProvider();
 
-const updateUserProfile = async ({ displayName, photoURL }) => {
-  if (auth.currentUser) {
-    await updateProfile(auth.currentUser, { displayName, photoURL });
-  }
-};
-
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);  // <-- token state যোগ করলাম
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Create user with email/password
   const createUser = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
+  // ✅ Sign in with email/password
   const signIn = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
+  // ✅ Sign in with Google
   const signInWithGoogle = () => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
 
+  // ✅ Log out
   const logOut = () => {
     setLoading(true);
     return signOut(auth);
   };
 
- useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-    setUser(currentUser);
-
-    if (currentUser) {
-      const idToken = await currentUser.getIdToken();
-      setToken(idToken);
-
-      try {
-        const response = await axios.get(`https://share-the-meal-server-blond.vercel.app/api/users?email=${currentUser.email}`);
-        if (response.status === 200) {
-          console.log("✅ User exists in MongoDB");
-        } else {
-          // Normally 404 হবে, তাই POST করবো
-          await axios.post("https://share-the-meal-server-blond.vercel.app/api/users", {
-            name: currentUser.displayName || "Unknown",
-            email: currentUser.email,
-            photo: currentUser.photoURL || null,
-          });
-          console.log("✅ User saved to MongoDB");
-        }
-      } catch (err) {
-        if (err.response?.status === 404) {
-          // ইউজার না পাওয়া গেলে POST করো
-          try {
-            await axios.post("https://share-the-meal-server-blond.vercel.app/api/users", {
-              name: currentUser.displayName || "Unknown",
-              email: currentUser.email,
-              photo: currentUser.photoURL || null,
-            });
-            console.log("✅ User saved to MongoDB");
-          } catch (postErr) {
-            console.error("❌ Error saving user:", postErr.message);
-          }
-        } else if (err.response?.status === 409) {
-          console.log("⚠️ User already exists in MongoDB");
-        } else {
-          console.error("❌ Error fetching user:", err.message);
-        }
-      }
-    } else {
-      setToken(null);
+  // ✅ Update user profile
+  const updateUser = ({ displayName, photoURL }) => {
+    if (auth.currentUser) {
+      return updateProfile(auth.currentUser, { displayName, photoURL });
     }
+  };
 
-    setLoading(false);
-  });
+  // ✅ Listen for auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
 
-  return () => unsubscribe();
-}, []);
+      if (currentUser) {
+        const idToken = await currentUser.getIdToken();
+        setToken(idToken);
 
+        // ✅ Check if user exists in MongoDB, if not, save
+        try {
+          await axios.get(`https://share-the-meal-server-blond.vercel.app/api/users?email=${currentUser.email}`);
+          console.log("✅ User exists in MongoDB");
+        } catch (err) {
+          if (err.response?.status === 404) {
+            try {
+              await axios.post("https://share-the-meal-server-blond.vercel.app/api/users", {
+                name: currentUser.displayName || "Unknown",
+                email: currentUser.email,
+                photo: currentUser.photoURL || null,
+              });
+              console.log("✅ User saved to MongoDB");
+            } catch (postErr) {
+              console.error("❌ Error saving user:", postErr.message);
+            }
+          } else if (err.response?.status === 409) {
+            console.log("⚠️ User already exists in MongoDB");
+          } else {
+            console.error("❌ Error fetching user:", err.message);
+          }
+        }
+      } else {
+        setToken(null);
+      }
 
+      setLoading(false);
+    });
 
+    return () => unsubscribe();
+  }, []);
 
+  // ✅ Context value
   const authInfo = {
     user,
-    token,     // <-- token context এ যোগ করলাম
+    token,
     loading,
     createUser,
     signIn,
     signInWithGoogle,
     logOut,
-    updateUserProfile,
+    updateUser,
   };
 
   return (

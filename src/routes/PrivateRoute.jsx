@@ -1,7 +1,8 @@
 // /src/routes/PrivateRoute.jsx
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/src/firebase/firebase.config";
+import { auth } from "../firebase/firebase.config";
+
 
 
 const PrivateRoute = ({ children }) => {

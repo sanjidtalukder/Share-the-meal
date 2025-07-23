@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
-import { auth } from "../firebase/src/firebase/firebase.config";
+
 
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Lottie from "lottie-react";
 import loginAnim from "../../src/assets/Welcome Animation.json"; // optional animation
+import { auth } from "../firebase/firebase.config";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();

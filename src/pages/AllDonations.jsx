@@ -37,6 +37,8 @@ const AllDonations = () => {
           }
         );
 
+        console.log(res.data)
+
         setDonations(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
         console.error("Error fetching donations", err);

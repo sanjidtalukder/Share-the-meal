@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../firebase/src/firebase/firebase.config";
+
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import Lottie from "lottie-react";
 import axios from "axios";
 import successAnim from "../../src/assets/form registration.json"; // ✔️ replace with your animation
+import { auth } from "../firebase/firebase.config";
 
 const Register = () => {
   const { register, handleSubmit, reset } = useForm();
