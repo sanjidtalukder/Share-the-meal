@@ -32,7 +32,7 @@ const Register = () => {
         photoURL: photo || "",
       });
 
-      await axios.post("https://share-the-meal-server-blond.vercel.app/api/users", {
+      await axios.post("https://share-the-meal-server-sigma.vercel.app/api/users", {
         name,
         email,
         photo,

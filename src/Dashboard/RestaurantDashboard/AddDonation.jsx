@@ -61,7 +61,7 @@ const AddDonation = () => {
       },
     };
 
-    await axios.post("https://share-the-meal-server-blond.vercel.app/api/donations", postData, {
+    await axios.post("https://share-the-meal-server-sigma.vercel.app/api/donations", postData, {
       headers: { Authorization: `Bearer ${token}` },
     });
 

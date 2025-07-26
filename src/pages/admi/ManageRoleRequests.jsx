@@ -6,14 +6,14 @@ const ManageRoleRequests = () => {
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    axios.get("https://share-the-meal-server-blond.vercel.app/api/charity-requests")
+    axios.get("https://share-the-meal-server-sigma.vercel.app/api/charity-requests")
       .then(res => setRequests(res.data))
       .catch(err => toast.error("Failed to fetch requests"));
   }, []);
 
   const handleAction = async (id, action) => {
     try {
-      await axios.patch(`https://share-the-meal-server-blond.vercel.app/api/charity-requests/${id}/${action}`);
+      await axios.patch(`https://share-the-meal-server-sigma.vercel.app/api/charity-requests/${id}/${action}`);
       toast.success(`Request ${action}ed`);
       setRequests(prev => prev.filter(r => r._id !== id));
     } catch (error) {

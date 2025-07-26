@@ -30,14 +30,13 @@ const AllDonations = () => {
         }
 
         const token = await user.getIdToken(true);
-        const res = await axios.get(
-          "https://share-the-meal-server-blond.vercel.app/api/donations?status=Verified",
+        const res = await axios.get("https://share-the-meal-server-sigma.vercel.app/api/donations?status=Verified",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
 
-        console.log(res.data)
+        console.log("All donetion data",res.data)
 
         setDonations(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
@@ -61,8 +60,8 @@ const AllDonations = () => {
     const locationStr =
       typeof donation.location === "string"
         ? donation.location
-        : `${donation.location?.city || ""} ${donation.location?.zip || ""}` ||
-          donation.restaurant?.location ||
+        // : `${donation.location?.city || ""} ${donation.location?.zip || ""}` ||
+          :donation.restaurant?.location ||
           "";
 
     return locationStr.toLowerCase().includes(searchTerm.toLowerCase());

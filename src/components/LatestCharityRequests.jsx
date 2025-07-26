@@ -32,7 +32,7 @@ const LatestCharityRequests = () => {
       try {
         const token = await user.getIdToken();
         const res = await axios.get(
-          "https://share-the-meal-server-blond.vercel.app/api/charity-requests/approved",
+          "https://share-the-meal-server-sigma.vercel.app/api/charity-requests/approved",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -208,8 +208,7 @@ const LatestCharityRequests = () => {
                 const message = form.message.value;
 
                 try {
-                  const res = await axios.post(
-                  "https://share-the-meal-server-blond.vercel.app/api/charity-requests/message"
+                  const res = await axios.post("https://share-the-meal-server-sigma.vercel.app/api/charity-requests/message"
 ,
                     {
                       name: user.displayName,

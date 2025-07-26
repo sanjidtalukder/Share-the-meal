@@ -27,7 +27,7 @@ const CharityProfile = () => {
 
         setPhotoURL(currentUser.photoURL); //  save fallback Gmail image
 
-        const res = await axios.get("https://share-the-meal-server-blond.vercel.app/api/charity-requests/profile", {
+        const res = await axios.get("https://share-the-meal-server-sigma.vercel.app/api/charity-requests/profile", {
           headers: {
             Authorization: `Bearer ${token}`
           }
