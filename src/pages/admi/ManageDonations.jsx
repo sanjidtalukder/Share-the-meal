@@ -15,7 +15,7 @@ const ManageDonations = () => {
       console.log("Using token:", token);
 
     axios
-      .get("https://share-the-meal-server-sigma.vercel.app/api/donations?status=Pending", {
+      .get("http://localhost:5000/api/donations?status=Pending", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setDonations(res.data))
@@ -29,7 +29,7 @@ const ManageDonations = () => {
   const handleVerify = async (id) => {
     try {
       setProcessingId(id);
-      await axios.put(`https://share-the-meal-server-sigma.vercel.app/api/donations/verify/${id}`, null, {
+      await axios.put(`http://localhost:5000/api/donations/verify/${id}`, null, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("Donation verified!");
@@ -45,7 +45,7 @@ const ManageDonations = () => {
   const handleReject = async (id) => {
     try {
       setProcessingId(id);
-      await axios.put(`https://share-the-meal-server-sigma.vercel.app/api/donations/reject/${id}`, null, {
+      await axios.put(`http://localhost:5000/api/donations/reject/${id}`, null, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.error("Donation rejected.");

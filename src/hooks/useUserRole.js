@@ -9,7 +9,7 @@ const useUserRole = () => {
   const { data: role, isLoading } = useQuery({
     queryKey: ["user-role", user?.email],
     queryFn: async () => {
-      const res = await axios.get(`https://share-the-meal-server-sigma.vercel.app/api/users?email=${user.email}`);
+      const res = await axios.get(`http://localhost:5000/api/users?email=${user.email}`);
       console.log("API Response:", res.data);
       return res.data?.role ?? null;
     },

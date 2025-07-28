@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import Lottie from "lottie-react";
 import loginAnim from "../../src/assets/Welcome Animation.json"; // optional animation
 import { auth } from "../firebase/firebase.config";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();

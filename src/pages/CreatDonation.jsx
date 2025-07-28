@@ -26,7 +26,7 @@ const CreateDonation = () => {
   useEffect(() => {
     if (user?.email) {
       axios
-        .get(`https://share-the-meal-server-sigma.vercel.app/api/users?email=${user.email}`)
+        .get(`http://localhost:5000/api/users?email=${user.email}`)
         .then((res) => {
           setUserRole(res.data.role);
           setLoadingRole(false);
@@ -70,7 +70,7 @@ const CreateDonation = () => {
     };
 
     try {
-      await axios.post("https://share-the-meal-server-sigma.vercel.app/api/donations", postData, {
+      await axios.post("http://localhost:5000/api/donations", postData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

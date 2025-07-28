@@ -14,7 +14,7 @@ const RequestCharityRole = () => {
   const [loading, setLoading] = useState(false);
 
   const amount = 25; // USD
-  const BASE_URL = "https://share-the-meal-server-sigma.vercel.app"; // backend API base
+  const BASE_URL = "http://localhost:5000"; // backend API base
 
   // Check for existing request
   useEffect(() => {

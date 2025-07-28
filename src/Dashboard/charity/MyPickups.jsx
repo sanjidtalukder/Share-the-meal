@@ -2,8 +2,16 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
 
+const MyPickups = ({ donation = {} }) => {
+  // fallback check
+  if (!donation || !donation._id) {
+    return (
+      <div className="p-4 border border-red-400 rounded text-red-600 text-sm">
+        ⚠️ Invalid or missing donation data.
+      </div>
+    );
+  }
 
-const DonationCard = ({ donation }) => {
   const {
     _id,
     image,
@@ -28,7 +36,7 @@ const DonationCard = ({ donation }) => {
 
   const handlePickup = async (donationId) => {
     try {
-      const response = await fetch(`/api/donations/${donationId}/pickup`, {
+      const response = await fetch(`http://localhost:5000/api/donations/${donationId}/pickup`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -38,7 +46,7 @@ const DonationCard = ({ donation }) => {
 
       if (response.ok) {
         alert("Pickup confirmed!");
-        // Optionally refresh UI
+        // Optionally: re-fetch data or update UI
       } else {
         console.error("Pickup failed.");
       }
@@ -49,9 +57,13 @@ const DonationCard = ({ donation }) => {
 
   return (
     <div className="rounded-xl border-2 border-green-400 overflow-hidden bg-white shadow-xl hover:shadow-2xl transition-shadow duration-300">
-      <img src={image} alt={title} className="w-full h-48 object-cover" />
+      <img
+        src={image || "https://via.placeholder.com/400x200?text=No+Image"}
+        alt={title || "Untitled"}
+        className="w-full h-48 object-cover"
+      />
       <div className="p-4 space-y-2">
-        <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
+        <h2 className="text-xl font-semibold text-gray-800">{title || "Untitled Donation"}</h2>
         <p><span className="font-semibold">Restaurant:</span> {restaurantName}</p>
         <p><span className="font-semibold">Location:</span> {location}</p>
         {charityName && (
@@ -95,4 +107,4 @@ const DonationCard = ({ donation }) => {
   );
 };
 
-export default DonationCard;
+export default MyPickups;

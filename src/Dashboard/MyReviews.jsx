@@ -5,7 +5,7 @@ const MyReviews = () => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    axios.get("/api/reviews")
+    axios.get("http://localhost:5000/api/reviews")
     .then(res => {
         const data = res.data;
         if(Array.isArray(data)){

@@ -11,7 +11,7 @@ const RestaurantProfile = () => {
     if (user?.email) {
       console.log("🔍 Fetching restaurant profile for:", user.email);
       axios
-        .get(`https://share-the-meal-server-sigma.vercel.app/api/restaurant/${user.email}`)
+        .get(`http://localhost:5000/api/restaurant/${user.email}`)
         .then((res) => {
           console.log("✅ Profile Loaded:", res.data);
           setRestaurant(res.data);

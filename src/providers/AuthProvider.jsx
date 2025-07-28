@@ -63,12 +63,12 @@ const AuthProvider = ({ children }) => {
 
         // ✅ Check if user exists in MongoDB, if not, save
         try {
-          await axios.get(`https://share-the-meal-server-sigma.vercel.app/api/users?email=${currentUser.email}`);
+          await axios.get(`http://localhost:5000/api/users?email=${currentUser.email}`);
           console.log("✅ User exists in MongoDB");
         } catch (err) {
           if (err.response?.status === 404) {
             try {
-              await axios.post("https://share-the-meal-server-sigma.vercel.app/api/users", {
+              await axios.post("http://localhost:5000/api/users", {
                 name: currentUser.displayName || "Unknown",
                 email: currentUser.email,
                 photo: currentUser.photoURL || null,

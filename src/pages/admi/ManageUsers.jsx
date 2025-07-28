@@ -7,7 +7,7 @@ const ManageUsers = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("https://share-the-meal-server-sigma.vercel.app/api/users/all")
+    axios.get("http://localhost:5000/api/users/all")
       .then(res => {
         setUsers(res.data);
         setLoading(false);
@@ -20,7 +20,7 @@ const ManageUsers = () => {
 
   const updateRole = async (id, role) => {
     try {
-      await axios.patch(`https://share-the-meal-server-sigma.vercel.app/api/users/${id}/role`, { role });
+      await axios.patch(`http://localhost:5000/api/users/${id}/role`, { role });
       toast.success(`Role updated to ${role}`);
       setUsers(prev =>
         prev.map(user => user._id === id ? { ...user, role } : user)
@@ -33,7 +33,7 @@ const ManageUsers = () => {
   const deleteUser = async (id) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
-      await axios.delete(`https://share-the-meal-server-sigma.vercel.app/api/users/${id}`);
+      await axios.delete(`http://localhost:5000/api/users/${id}`);
       toast.success("User deleted");
       setUsers(prev => prev.filter(user => user._id !== id));
     } catch {

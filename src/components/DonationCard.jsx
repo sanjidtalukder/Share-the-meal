@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../providers/AuthProvider";
 
-const DonationCard = ({ donation }) => {
+const DonationCard = ({ donation ={} }) => {
   if (!donation) {
     return (
       <div className="p-4 border border-red-400 rounded text-red-600 text-sm">
@@ -37,7 +37,7 @@ const DonationCard = ({ donation }) => {
 
   const handlePickup = async (donationId) => {
     try {
-      const response = await fetch(`/api/donations/${donationId}/pickup`, {
+      const response = await fetch(`http://localhost:5000/api/donations/${donationId}/pickup`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

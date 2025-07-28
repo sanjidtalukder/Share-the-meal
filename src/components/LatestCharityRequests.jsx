@@ -32,7 +32,7 @@ const LatestCharityRequests = () => {
       try {
         const token = await user.getIdToken();
         const res = await axios.get(
-          "https://share-the-meal-server-sigma.vercel.app/api/charity-requests/approved",
+          "http://localhost:5000/api/charity-requests/approved",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

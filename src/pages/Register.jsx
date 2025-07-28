@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import Lottie from "lottie-react";
 import axios from "axios";
-import successAnim from "../../src/assets/form registration.json"; // ✔️ replace with your animation
+import successAnim from "../../src/assets/form registration.json"; // ✔️ your animation path
 import { auth } from "../firebase/firebase.config";
 
 const Register = () => {
   const { register, handleSubmit, reset } = useForm();
-  const [error, setError] = useState(null);
   const [showSuccessAnim, setShowSuccessAnim] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
@@ -25,36 +24,47 @@ const Register = () => {
     }
 
     try {
+      // 1. Create User in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
+      // 2. Update User Profile
       await updateProfile(userCredential.user, {
         displayName: name,
         photoURL: photo || "",
       });
 
-      await axios.post("https://share-the-meal-server-sigma.vercel.app/api/users", {
-        name,
-        email,
-        photo,
-      });
+      // 3. Save User to Database
+      try {
+        await axios.post("http://localhost:5000/api/users", {
+          name,
+          email,
+          photo,
+        });
+      } catch (apiErr) {
+        toast.error("User registered, but failed to save to database.");
+        console.error("API Error:", apiErr.message);
+      }
 
+      // 4. Show Success
       toast.success("Registration successful!");
       setShowSuccessAnim(true);
       reset();
 
+      // 5. Redirect to Home after animation
       setTimeout(() => {
         setShowSuccessAnim(false);
         navigate("/");
       }, 2500);
-    } catch (err) {
-      setError(err.message);
+    } catch (firebaseErr) {
+      console.error("Firebase Error:", firebaseErr.message);
+      setError(firebaseErr.message);
       toast.error("Registration failed. Try again.");
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-green-100 to-green-200 px-6 py-10 gap-8">
-      
+
       {/* Animation Section */}
       <div className="hidden md:flex md:w-1/2 justify-center">
         <div className="w-full max-w-lg">
