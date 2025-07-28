@@ -1,12 +1,137 @@
-# React + Vite
+# 🍽️ FoodBridge - Local Food Waste Reduction Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**FoodBridge** is a full-stack MERN application designed to reduce food waste by connecting **Restaurants**, **Charities**, and **Users**. Restaurants can donate surplus food, charities can request and pick it up, and users can browse and save food listings. Admins have full control over donations, users, roles, transactions, and more.
 
-Currently, two official plugins are available:
+🔐 All sensitive operations are secured using **JWT Authentication**, and **Stripe** is used to handle secure payments for Charity role requests.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🔗 Live Website
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+🌐 **Live Site**: [https://share-the-meal-fde40.web.app/](https://share-the-meal-fde40.web.app/)
+
+---
+
+## 🛠️ Admin Credentials
+
+- **Email**: `admin@foodbridge.com`
+- **Password**: `Admin@123`
+
+---
+
+## 🍴 Demo Accounts
+
+### ✅ Restaurant
+- **Email**: `restaurant@foodbridge.com`
+- **Password**: `Restaurant@123`
+
+### ✅ Charity
+- **Email**: `charity@foodbridge.com`
+- **Password**: `Charity@123`
+
+---
+
+## 🚀 Key Features
+
+1. 🔐 Secure authentication with Email/Password and Google Login.
+2. 💳 Stripe payment integration for Charity role requests.
+3. 🍱 Restaurants can add, edit, and delete food donations.
+4. 🎯 Charities can request, confirm pickup, and review donations.
+5. ❤️ Users can save donations to Favorites and add Reviews.
+6. 🧾 Admin Dashboard to manage users, donations, roles, and transactions.
+7. 📊 Donation analytics using Recharts.
+8. 🌐 Mapbox integration for visualizing donation locations.
+9. 🔍 Search and sort donations by location, quantity, and time.
+10. 🔔 SweetAlert2 and React Toastify used for all user notifications.
+
+---
+
+## 🖼️ Pages Overview
+
+### Public Routes
+- `/` — Home (Banner, Featured Donations, Stats, Community Stories)
+- `/login` — Login/Register (with social login)
+- `*` — 404 Not Found Page
+
+### Protected Routes
+- `/alldonations` — Verified donations with filters
+- `/donation/:id` — Donation Details with request and review options
+- `/dashboard` — Role-based dashboard (User, Charity, Restaurant, Admin)
+
+---
+
+## 📂 Project Structure
+
+client/
+│
+├── src/
+│ ├── components/ # Navbar, cards, buttons, modals, etc.
+│ ├── layouts/ # Page layout files (MainLayout, DashboardLayout)
+│ ├── pages/ # All main page components
+│ ├── routes/ # Protected and role-based route logic
+│ ├── context/ # Authentication and TanStack Query providers
+│ ├── hooks/ # Custom hooks (e.g., useAuth, useAxiosSecure)
+│ ├── services/ # API services (Axios instance)
+│ ├── utils/ # Utility/helper functions
+│ └── App.jsx # Main entry point
+│
+├── .env # Environment variables (API URL, Stripe Key)
+├── README.md # This file
+└── ...
+
+
+---
+
+## ⚙️ Tech Stack
+
+- **React.js (Vite)**
+- **Tailwind CSS + DaisyUI** — UI styling
+- **Firebase** — Authentication (Email & Google)
+- **React Hook Form** — Form validation and handling
+- **Tanstack React Query** — Data fetching and mutation
+- **SweetAlert2 + React Toastify** — Alerts and toasts
+- **Stripe Checkout** — Secure payments
+- **Mapbox** — Location mapping
+- **JWT** — Secure route protection
+- **Recharts** — Charts and statistics
+
+---
+
+## 🔐 Authentication & Security
+
+- JWT tokens are stored in `localStorage`.
+- Custom Axios interceptor handles expired or unauthorized tokens.
+- Firebase’s `onAuthStateChanged()` maintains session persistence across reloads.
+
+---
+
+## 💡 Unique Functionalities
+
+- ♻️ Real-world food donation workflow simulation.
+- ⭐ Admin can feature verified donations on Home Page.
+- 💸 Payment history and transaction tracking via Stripe.
+- 🌍 Filter donations based on city, zip code, or pickup time.
+- 🧾 Role-based dashboards for each type of user.
+
+---
+
+## 🧪 Development Summary
+
+- ✅ 20+ meaningful commits on the client-side
+- ✅ Complete CRUD operations for all user roles
+- ✅ Fully responsive across all devices
+- ✅ Tested thoroughly with all demo accounts
+
+---
+
+👤 Author
+
+Sanjid Talukder
+
+🎓 CSE Student, Dhaka International University
+
+💼 Junior Web Developer
+
+📍 Dhaka, Bangladesh
+
+📧 Email: sanjidtalukder02@gmail.com
