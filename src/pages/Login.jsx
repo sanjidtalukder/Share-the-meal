@@ -49,7 +49,7 @@ const Login = () => {
         }
       }, 2500);
     } catch (err) {
-      setError("Invalid email or password.");
+      setError("Invalid email or password.",err);
       toast.error("Login failed. Redirecting to register...");
       setTimeout(() => {
         navigate("/register");

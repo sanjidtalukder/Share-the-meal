@@ -20,7 +20,7 @@ const FeatureDonations = () => {
       await axios.post(`http://localhost:5000/api/featured`, { donationId: id });
       toast.success("Donation featured!");
     } catch (err) {
-      toast.error("Failed to feature donation");
+      toast.error("Failed to feature donation",err);
     } finally {
       setFeaturingId(null);
     }

@@ -8,7 +8,7 @@ const ManageRoleRequests = () => {
   useEffect(() => {
     axios.get("http://localhost:5000/api/charity-requests")
       .then(res => setRequests(res.data))
-      .catch(err => toast.error("Failed to fetch requests"));
+      .catch(err => toast.error("Failed to fetch requests",err));
   }, []);
 
   const handleAction = async (id, action) => {
@@ -17,7 +17,7 @@ const ManageRoleRequests = () => {
       toast.success(`Request ${action}ed`);
       setRequests(prev => prev.filter(r => r._id !== id));
     } catch (error) {
-      toast.error(`Failed to ${action} request`);
+      toast.error(`Failed to ${action} request`,error);
     }
   };
 

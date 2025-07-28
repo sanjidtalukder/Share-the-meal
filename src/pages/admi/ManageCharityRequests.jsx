@@ -44,7 +44,7 @@ const ManageCharityRequests = () => {
       toast.success("Request deleted");
       setRequests((prev) => prev.filter((r) => r._id !== id));
     } catch (error) {
-      toast.error("Failed to delete request");
+      toast.error("Failed to delete request",error);
     } finally {
       setDeletingId(null);
     }
