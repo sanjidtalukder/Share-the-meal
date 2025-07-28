@@ -8,7 +8,7 @@ const FeatureDonations = () => {
   const [featuringId, setFeaturingId] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/donations?status=Verified")
+    axios.get("https://share-the-meal-server.onrender.com/api/all-donations")
       .then(res => setDonations(res.data))
       .catch(() => toast.error("Failed to load donations"))
       .finally(() => setLoading(false));
@@ -17,7 +17,7 @@ const FeatureDonations = () => {
   const handleFeature = async (id) => {
     try {
       setFeaturingId(id);
-      await axios.post(`http://localhost:5000/api/featured`, { donationId: id });
+      await axios.post(`https://share-the-meal-server.onrender.com/api/featured`, { donationId: id });
       toast.success("Donation featured!");
     } catch (err) {
       toast.error("Failed to feature donation",err);

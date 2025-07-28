@@ -12,7 +12,7 @@ const TransactionHistory = () => {
 
     setLoading(true);
     axios
-      .get(`http://localhost:5000/api/transactions/charity?email=${user.email}`)
+      .get(`https://share-the-meal-server.onrender.com/api/transactions/charity?email=${user.email}`)
       .then((res) => {
         if (Array.isArray(res.data)) {
           setTransactions(res.data);

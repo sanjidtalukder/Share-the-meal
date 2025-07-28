@@ -13,7 +13,7 @@ const MyRequests = () => {
     setError(null);
 
     try {
-      const res = await axios.get(`http://localhost:5000/api/requests?charityEmail=${user.email}`);
+      const res = await axios.get(`https://share-the-meal-server.onrender.com/api/requests?charityEmail=${user.email}`);
       setRequests(res.data);
     } catch (err) {
       setError("Failed to load requests");
@@ -28,7 +28,7 @@ const MyRequests = () => {
     if (!window.confirm("Are you sure you want to cancel this pending request?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/requests/${id}`);
+      await axios.delete(`https://share-the-meal-server.onrender.com/api/requests/${id}`);
       fetchRequests();
     } catch (err) {
       alert(err.response?.data?.error || "Failed to cancel request");

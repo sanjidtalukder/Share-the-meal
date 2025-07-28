@@ -30,7 +30,7 @@ const CharityProfile = () => {
         const token = await currentUser.getIdToken();
         setPhotoURL(currentUser.photoURL);
 
-        const res = await axios.get("http://localhost:5000/api/charity-requests/profile", {
+        const res = await axios.get("https://share-the-meal-server.onrender.com/api/charity-requests/profile", {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -69,7 +69,7 @@ const CharityProfile = () => {
       const token = await currentUser.getIdToken();
 
       const res = await axios.put(
-        "http://localhost:5000/api/charity-requests/profile",
+        "https://share-the-meal-server.onrender.com/api/charity-requests/profile",
         formData,
         {
           headers: {

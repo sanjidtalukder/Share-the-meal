@@ -14,7 +14,7 @@ const ReceivedDonations = () => {
     
     if (user?.email) {
       // Fetch received donations
-      axios.get(`http://localhost:5000/api/requests/received?charityId=${user._id}`)
+      axios.get(`https://share-the-meal-server.onrender.com/api/requests/received?charityId=${user._id}`)
         .then(res => {
           setDonations(Array.isArray(res.data) ? res.data : []);
         })
@@ -24,7 +24,7 @@ const ReceivedDonations = () => {
         });
 
       // Fetch payment records
-      axios.get(`http://localhost:5000/api/donation-payments?email=${user.email}`)
+      axios.get(`https://share-the-meal-server.onrender.com/api/donation-payments?email=${user.email}`)
         .then(res => {
           setPayments(Array.isArray(res.data) ? res.data : []);
         })

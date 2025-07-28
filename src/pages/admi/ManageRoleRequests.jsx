@@ -6,14 +6,14 @@ const ManageRoleRequests = () => {
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/charity-requests")
+    axios.get("https://share-the-meal-server.onrender.com/api/charity-requests")
       .then(res => setRequests(res.data))
       .catch(err => toast.error("Failed to fetch requests",err));
   }, []);
 
   const handleAction = async (id, action) => {
     try {
-      await axios.patch(`http://localhost:5000/api/charity-requests/${id}/${action}`);
+      await axios.patch(`https://share-the-meal-server.onrender.com/api/charity-requests/${id}/${action}`);
       toast.success(`Request ${action}ed`);
       setRequests(prev => prev.filter(r => r._id !== id));
     } catch (error) {

@@ -32,7 +32,7 @@ const LatestCharityRequests = () => {
       try {
         const token = await user.getIdToken();
         const res = await axios.get(
-          "http://localhost:5000/api/charity-requests/approved",
+          "https://share-the-meal-server.onrender.com/api/charity-requests/approved",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

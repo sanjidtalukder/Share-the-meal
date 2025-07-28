@@ -35,7 +35,7 @@ const Register = () => {
 
       // 3. Save User to Database
       try {
-        await axios.post("http://localhost:5000/api/users", {
+        await axios.post("https://share-the-meal-server.onrender.com/api/users", {
           name,
           email,
           photo,

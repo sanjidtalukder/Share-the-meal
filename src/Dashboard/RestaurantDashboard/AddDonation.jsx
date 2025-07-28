@@ -61,7 +61,7 @@ const AddDonation = () => {
       },
     };
 
-    await axios.post("http://localhost:5000/api/donations", postData, {
+    await axios.post("https://share-the-meal-server.onrender.com/api/donations", postData, {
       headers: { Authorization: `Bearer ${token}` },
     });
 

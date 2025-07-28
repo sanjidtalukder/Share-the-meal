@@ -6,7 +6,7 @@ const RequestDonations = () => {
   const [requests, setRequests] = useState([]);
 
   const fetchRequests = async () => {
-    const res = await axios.get("http://localhost:5000/api/requestDonations");
+    const res = await axios.get("https://share-the-meal-server.onrender.com/api/requestDonations");
     setRequests(res.data);
   };
 
@@ -15,12 +15,12 @@ const RequestDonations = () => {
   }, []);
 
   const handleAccept = async (id) => {
-    await axios.post(`http://localhost:5000/api/requestDonations/${id}/accept`);
+    await axios.post(`https://share-the-meal-server.onrender.com/api/requestDonations/${id}/accept`);
     fetchRequests();
   };
 
   const handleReject = async (id) => {
-    await axios.post(`http://localhost:5000/requestDonations/${id}/reject`);
+    await axios.post(`https://share-the-meal-server.onrender.com/requestDonations/${id}/reject`);
     fetchRequests();
   };
 

@@ -30,7 +30,7 @@ const AllDonations = () => {
         }
 
         const token = await user.getIdToken(true);
-        const res = await axios.get("http://localhost:5000/api/donations?status=Verified",
+        const res = await axios.get("https://share-the-meal-server.onrender.com/api/donations?status=Verified",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

@@ -37,7 +37,7 @@ const DonationCard = ({ donation ={} }) => {
 
   const handlePickup = async (donationId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/donations/${donationId}/pickup`, {
+      const response = await fetch(`https://share-the-meal-server.onrender.com/api/donations/${donationId}/pickup`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
