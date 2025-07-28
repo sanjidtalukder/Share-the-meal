@@ -1,6 +1,6 @@
 # 🍽️ Share The Meal 
 
-**FoodBridge** is a full-stack MERN application designed to reduce food waste by connecting **Restaurants**, **Charities**, and **Users**. Restaurants can donate surplus food, charities can request and pick it up, and users can browse and save food listings. Admins have full control over donations, users, roles, transactions, and more.
+**Share The Meal ** is a full-stack MERN application designed to reduce food waste by connecting **Restaurants**, **Charities**, and **Users**. Restaurants can donate surplus food, charities can request and pick it up, and users can browse and save food listings. Admins have full control over donations, users, roles, transactions, and more.
 
 🔐 All sensitive operations are secured using **JWT Authentication**, and **Stripe** is used to handle secure payments for Charity role requests.
 
@@ -10,7 +10,7 @@
 
 🌐 **Live Site**: [https://share-the-meal-fde40.web.app/](https://share-the-meal-fde40.web.app/)
 
-## 🛠️ User Credentials
+## 🍴  User Credentials
 
 - **Email**: `your_Email_id@gmail.com`
 - **Password**: `1Aa...`
@@ -28,31 +28,19 @@
 
 ---
 
-## 🛠️ Charity Credentials
+## ✅  Charity Credentials
 
 - **Email**: `kabir34@gmail.com`
 - **Password**: `123San`
 
 ---
 
-## 🛠️ Restaurant Credentials
+## ✅  Restaurant Credentials
 
 - **Email**: `sanrize@gmail.com`
 - **Password**: `123San`
 
 ---
-
-
-
-## 🍴 Demo Accounts
-
-### ✅ Restaurant
-- **Email**: `restaurant@foodbridge.com`
-- **Password**: `Restaurant@123`
-
-### ✅ Charity
-- **Email**: `charity@foodbridge.com`
-- **Password**: `Charity@123`
 
 ---
 
