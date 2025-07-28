@@ -1,4 +1,4 @@
-# 🍽️ FoodBridge - Local Food Waste Reduction Platform
+# 🍽️ Share The Meal 
 
 **FoodBridge** is a full-stack MERN application designed to reduce food waste by connecting **Restaurants**, **Charities**, and **Users**. Restaurants can donate surplus food, charities can request and pick it up, and users can browse and save food listings. Admins have full control over donations, users, roles, transactions, and more.
 
@@ -10,14 +10,39 @@
 
 🌐 **Live Site**: [https://share-the-meal-fde40.web.app/](https://share-the-meal-fde40.web.app/)
 
+## 🛠️ User Credentials
+
+- **Email**: `your_Email_id@gmail.com`
+- **Password**: `1Aa...`
+
+---
+
 ---
 
 ## 🛠️ Admin Credentials
 
-- **Email**: `admin@foodbridge.com`
-- **Password**: `Admin@123`
+- **Email**: `sakib789@gmail.com`
+- **Password**: `123San`
 
 ---
+
+---
+
+## 🛠️ Charity Credentials
+
+- **Email**: `kabir34@gmail.com`
+- **Password**: `123San`
+
+---
+
+## 🛠️ Restaurant Credentials
+
+- **Email**: `sanrize@gmail.com`
+- **Password**: `123San`
+
+---
+
+
 
 ## 🍴 Demo Accounts
 
@@ -63,20 +88,32 @@
 ## 📂 Project Structure
 
 client/
+
 │
 ├── src/
+
 │ ├── components/ # Navbar, cards, buttons, modals, etc.
+
 │ ├── layouts/ # Page layout files (MainLayout, DashboardLayout)
+
 │ ├── pages/ # All main page components
+
 │ ├── routes/ # Protected and role-based route logic
+
 │ ├── context/ # Authentication and TanStack Query providers
+
 │ ├── hooks/ # Custom hooks (e.g., useAuth, useAxiosSecure)
+
 │ ├── services/ # API services (Axios instance)
+
 │ ├── utils/ # Utility/helper functions
+
 │ └── App.jsx # Main entry point
 │
 ├── .env # Environment variables (API URL, Stripe Key)
+
 ├── README.md # This file
+
 └── ...
 
 
